@@ -854,8 +854,8 @@ TraceKit.computeStackTrace = (function () {
 		}
 
 		if (depth) {
-			console.log('depth is ' + depth);
-			console.log('stack is ' + stack.length);
+			// console.log('depth is ' + depth);
+			// console.log('stack is ' + stack.length);
 			stack.splice(0, depth);
 		}
 
@@ -1004,7 +1004,7 @@ TraceKit.computeStackTrace = (function () {
 		return _oldReady.call(this, _fn);
 	};
 
-	var _oldAjax = jQuery.ajax;
+	var _oldAjax = $.ajax;
 	$.fn.ajax = function (s) {
 		if ($.isFunction(s.complete)) {
 			var _oldComplete = s.complete;
