@@ -1,4 +1,4 @@
-/**!
+/**! @preserve
  * Original CrashKit code Copyright (c) 2009 Andrey Tarantsov, YourSway LLC (http://crashkitapp.appspot.com/)
  * Copyright (c) 2010 Colin Snover (http://zetafleet.com)
  *
@@ -65,7 +65,7 @@ TraceKit.report = (function () {
 	 */
 	function unsubscribe(handler) {
 		for (var i = handlers.length - 1; i >= 0; --i) {
-			if(handlers[i] === handler) {
+			if (handlers[i] === handler) {
 				handlers.splice(i, 1);
 			}
 		}
@@ -253,7 +253,7 @@ TraceKit.computeStackTrace = (function () {
 					try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch(e) {}
 					try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch(e) {}
 					try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch(e) {}
-					throw new Error( "This browser does not support XMLHttpRequest." );
+					throw new Error('No XHR.');
 				};
 			}
 
@@ -354,7 +354,7 @@ TraceKit.computeStackTrace = (function () {
 	 * @return {string} The escaped string literal.
 	 */
 	function escapeRegExp(text) {
-		return text.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&');
+		return text.replace(/[\-\[\]{}()*+?.,\\\^$|#]/g, '\\$&');
 	}
 
 	/**
@@ -567,7 +567,7 @@ TraceKit.computeStackTrace = (function () {
 			stack.push(element);
 		}
 
-		if(stack[0] && stack[0].line && !stack[0].column && reference) {
+		if (stack[0] && stack[0].line && !stack[0].column && reference) {
 			stack[0].column = findSourceInLine(reference[1], stack[0].url, stack[0].line);
 		}
 
@@ -809,12 +809,11 @@ TraceKit.computeStackTrace = (function () {
 		funcs = {},
 		recursion = false,
 		parts,
-		i = 0,
 		item,
 		source;
 
 		for (var curr = arguments.callee.caller; curr && !recursion; curr = curr.caller) {
-			if(curr === computeStackTrace || curr === TraceKit.report) {
+			if (curr === computeStackTrace || curr === TraceKit.report) {
 				// console.log('skipping internal function');
 				continue;
 			}
@@ -829,7 +828,7 @@ TraceKit.computeStackTrace = (function () {
 			if (curr.name) {
 				item.func = curr.name;
 			}
-			else if((parts = functionName.exec(curr.toString()))) {
+			else if ((parts = functionName.exec(curr.toString()))) {
 				item.func = parts[1];
 			}
 
