@@ -957,6 +957,10 @@ TraceKit.computeStackTrace = (function () {
  * asynchronous jQuery functions.
  */
 (function ($) {
+    
+    // quit if jQuery isn't on the page
+    if (!$) return;
+    
 	var _oldEventAdd = $.event.add;
 	$.event.add = function (elem, types, handler, data) {
 		var _handler;
@@ -1053,4 +1057,4 @@ TraceKit.computeStackTrace = (function () {
 			throw e;
 		}
 	};
-}(jQuery));
+}(window.jQuery));
