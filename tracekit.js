@@ -990,6 +990,18 @@ TraceKit.computeStackTrace = (function () {
 			};
 		}
 
+		// If the handler we are attaching doesn’t have the same guid as
+		// the original, it will never be removed when someone tries to
+		// unbind the original function later. Technically as a result of
+		// this our guids are no longer globally unique, but whatever, that
+		// never hurt anybody RIGHT?!
+		if (_handler.guid) {
+			handler.guid = _handler.guid;
+		}
+		else {
+			handler.guid = _handler.guid = $.guid++;
+		}
+
 		return _oldEventAdd.call(this, elem, types, handler, data);
 	};
 
