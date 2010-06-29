@@ -248,7 +248,7 @@ TraceKit.computeStackTrace = (function () {
 	function loadSource(url) {
 		try {
 			if (XMLHttpRequest === undefined) { // IE 5.x-6.x:
-				XMLHttpRequest = function() {
+				XMLHttpRequest = function () {
 					try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch(e) {}
 					try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch(e) {}
 					try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch(e) {}
@@ -953,14 +953,59 @@ TraceKit.computeStackTrace = (function () {
 }());
 
 /**
+ * Extends support for global error handling for asynchronous browser
+ * functions.
+ */
+(function (w) {
+	var _oldSetTimeout = w.setTimeout;
+	w.setTimeout = function () {
+		var _oldCallback = arguments[0];
+
+		arguments[0] = function () {
+			try {
+				_oldCallback.apply(this, arguments);
+			}
+			catch (e) {
+				TraceKit.report(e);
+				throw e;
+			}
+		};
+
+		_oldSetTimeout.apply(this, arguments);
+	};
+
+	// If you are reading this, you should know that setInterval is
+	// bad! Don’t use it!
+	// http://zetafleet.com/blog/why-i-consider-setinterval-harmful
+	var _oldSetInterval = w.setInterval;
+	w.setInterval = function () {
+		var _oldCallback = arguments[0];
+
+		arguments[0] = function () {
+			try {
+				_oldCallback.apply(this, arguments);
+			}
+			catch (e) {
+				TraceKit.report(e);
+				throw e;
+			}
+		};
+
+		_oldSetInterval.apply(this, arguments);
+	};
+}(window));
+
+/**
  * Extended support for backtraces and global error handling for most
  * asynchronous jQuery functions.
  */
 (function ($) {
-    
-    // quit if jQuery isn't on the page
-    if (!$) return;
-    
+
+	// quit if jQuery isn't on the page
+	if (!$) {
+		return;
+	}
+
 	var _oldEventAdd = $.event.add;
 	$.event.add = function (elem, types, handler, data) {
 		var _handler;
