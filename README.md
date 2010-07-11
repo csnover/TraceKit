@@ -3,7 +3,7 @@ TraceKit
 
 ### Tracekit is a JavaScript library that automatically normalizes and exposes stack traces for unhandled exceptions across the 5 major browsers: IE, Firefox, Chrome, Safari, and Opera. ###
 
-Based on the hard work of [Andrey Tarantsov](http://www.tarantsov.com/) and [javascript-stacktrace](http://github.com/emwendelin/javascript-stacktrace).
+Based on the hard work of [Andrey Tarantsov](http://www.tarantsov.com/).
 
 TraceKit:
 
