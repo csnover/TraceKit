@@ -46,3 +46,8 @@ In theory, TraceKit should work on all of the following versions:
 `view the source` comments for more details and examples
 
 [Announcement blog post](http://zetafleet.com/blog/improve-javascript-error-reporting-with-tracekit) in case you'd like to comment.
+
+
+
+![Stacktrace or GTFO](http://i.imgur.com/jacoj.jpg)
+
