@@ -971,7 +971,7 @@ TraceKit.computeStackTrace = (function () {
 			}
 		};
 
-		_oldSetTimeout.apply(this, arguments);
+		return _oldSetTimeout.apply(this, arguments);
 	};
 
 	// If you are reading this, you should know that setInterval is
@@ -991,7 +991,7 @@ TraceKit.computeStackTrace = (function () {
 			}
 		};
 
-		_oldSetInterval.apply(this, arguments);
+		return _oldSetInterval.apply(this, arguments);
 	};
 }(window));
 
