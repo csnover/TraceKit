@@ -957,11 +957,14 @@ TraceKit.computeStackTrace = (function () {
  * functions.
  */
 (function (w) {
-	var _oldSetTimeout = w.setTimeout;
-	w.setTimeout = function () {
-		var _oldCallback = arguments[0];
+	var slice = Array.prototype.slice,
+		_oldSetTimeout = w.setTimeout;
 
-		arguments[0] = function () {
+	w.setTimeout = function () {
+		var args = slice.call(arguments, 0),
+			_oldCallback = args[0];
+
+		args[0] = function () {
 			try {
 				_oldCallback.apply(this, arguments);
 			}
@@ -971,7 +974,7 @@ TraceKit.computeStackTrace = (function () {
 			}
 		};
 
-		return _oldSetTimeout.apply(this, arguments);
+		return _oldSetTimeout.apply(this, args);
 	};
 
 	// If you are reading this, you should know that setInterval is
@@ -979,9 +982,10 @@ TraceKit.computeStackTrace = (function () {
 	// http://zetafleet.com/blog/why-i-consider-setinterval-harmful
 	var _oldSetInterval = w.setInterval;
 	w.setInterval = function () {
-		var _oldCallback = arguments[0];
+		var args = slice.call(arguments, 0),
+			_oldCallback = args[0];
 
-		arguments[0] = function () {
+		args[0] = function () {
 			try {
 				_oldCallback.apply(this, arguments);
 			}
@@ -991,7 +995,7 @@ TraceKit.computeStackTrace = (function () {
 			}
 		};
 
-		return _oldSetInterval.apply(this, arguments);
+		return _oldSetInterval.apply(this, args);
 	};
 }(window));
 
