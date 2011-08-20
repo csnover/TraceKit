@@ -954,49 +954,39 @@ TraceKit.computeStackTrace = (function () {
 
 /**
  * Extends support for global error handling for asynchronous browser
- * functions.
+ * functions. Adopted from Closure Library's errorhandler.js
  */
 (function (w) {
-	var slice = Array.prototype.slice,
-		_oldSetTimeout = w.setTimeout;
+	var _helper = function(fnName) {
+		var originalFn = w[fnName];
+		w[fnName] = function() {
+			// Make a copy of the arguments
+			var args = Array.prototype.slice.call(arguments, 0);
+			var originalCallback = args[0];
+			args[0] = function() {
+				try {
+					return originalCallback.apply(this, arguments);
+				}
+				catch (e) {
+					TraceKit.report(e);
+					throw e;
+				}
+			};
 
-	w.setTimeout = function () {
-		var args = slice.call(arguments, 0),
-			_oldCallback = args[0];
-
-		args[0] = function () {
-			try {
-				_oldCallback.apply(this, arguments);
+			// IE < 9 doesn't support .call/.apply on setInterval/setTimeout, but it
+			// also only supports 2 argument and doesn't care what "this" is, so we
+			// can just call the original function directly.
+			if (originalFn.apply) {
+				return originalFn.apply(this, args);
 			}
-			catch (e) {
-				TraceKit.report(e);
-				throw e;
-			}
-		};
-
-		return _oldSetTimeout.apply(this, args);
-	};
-
-	// If you are reading this, you should know that setInterval is
-	// bad! Don’t use it!
-	// http://zetafleet.com/blog/why-i-consider-setinterval-harmful
-	var _oldSetInterval = w.setInterval;
-	w.setInterval = function () {
-		var args = slice.call(arguments, 0),
-			_oldCallback = args[0];
-
-		args[0] = function () {
-			try {
-				_oldCallback.apply(this, arguments);
-			}
-			catch (e) {
-				TraceKit.report(e);
-				throw e;
+			else {
+				return originalFn(args[0], args[1]);
 			}
 		};
-
-		return _oldSetInterval.apply(this, args);
 	};
+
+	_helper('setTimeout');
+	_helper('setInterval');
 }(window));
 
 /**
