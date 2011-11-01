@@ -965,7 +965,9 @@ TraceKit.computeStackTrace = (function () {
 			var originalCallback = args[0];
 			args[0] = function() {
 				try {
-					return originalCallback.apply(this, arguments);
+          if(typeof(originalCallback) !== 'string') {
+            return originalCallback.apply(this, arguments);
+          }
 				}
 				catch (e) {
 					TraceKit.report(e);
@@ -1108,4 +1110,5 @@ TraceKit.computeStackTrace = (function () {
 			throw e;
 		}
 	};
+
 }(window.jQuery));
