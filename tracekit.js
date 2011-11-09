@@ -963,16 +963,16 @@ TraceKit.computeStackTrace = (function () {
 			// Make a copy of the arguments
 			var args = Array.prototype.slice.call(arguments, 0);
 			var originalCallback = args[0];
-			args[0] = function() {
-				try {
-					return originalCallback.apply(this, arguments);
-				}
-				catch (e) {
-					TraceKit.report(e);
-					throw e;
-				}
-			};
-
+			if(typeof(originalCallback) === 'function') {
+				args[0] = function() {
+					try {
+						originalCallback.apply(this, arguments);
+					} catch (e) {
+						TraceKit.report(e);
+						throw e;
+					}
+				};
+			} 
 			// IE < 9 doesn't support .call/.apply on setInterval/setTimeout, but it
 			// also only supports 2 argument and doesn't care what "this" is, so we
 			// can just call the original function directly.
@@ -1108,4 +1108,5 @@ TraceKit.computeStackTrace = (function () {
 			throw e;
 		}
 	};
+
 }(window.jQuery));
