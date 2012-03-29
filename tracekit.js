@@ -274,7 +274,15 @@ TraceKit.computeStackTrace = (function () {
 	 */
 	function getSource(url) {
 		if (!sourceCache.hasOwnProperty(url)) {
-			var source = loadSource(url);
+            // URL needs to be able to fetched within the acceptable domain.  Otherwise,
+            // cross-domain errors will be triggered.
+            var source;
+            if (url.indexOf(document.domain) != -1) {
+                source = loadSource(url);
+            }
+            else {
+                source = [];
+            }
 			sourceCache[url] = source.length ? source.split("\n") : [];
 		}
 
