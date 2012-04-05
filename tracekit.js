@@ -1019,7 +1019,7 @@ TraceKit.computeStackTrace = (function () {
 	}
 
 	var _oldEventAdd = $.event.add;
-	$.event.add = function (elem, types, handler, data) {
+	$.event.add = function (elem, types, handler, data, selector) {
 		var _handler;
 
 		if (handler.handler) {
@@ -1059,7 +1059,7 @@ TraceKit.computeStackTrace = (function () {
 			handler.guid = _handler.guid = $.guid++;
 		}
 
-		return _oldEventAdd.call(this, elem, types, handler, data);
+		return _oldEventAdd.call(this, elem, types, handler, data, selector);
 	};
 
 	var _oldReady = $.fn.ready;
