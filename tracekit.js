@@ -120,6 +120,7 @@ TraceKit.report = (function () {
             stack = {
                 'mode': 'onerror',
                 'message': message,
+				'url': document.location,
                 'stack': [location]
             };
         }
@@ -603,6 +604,7 @@ TraceKit.computeStackTrace = (function () {
             'mode': 'stack',
             'name': ex.name,
             'message': ex.message,
+            'url': document.location,
             'stack': stack
         };
     }
@@ -659,6 +661,7 @@ TraceKit.computeStackTrace = (function () {
             'mode': 'stacktrace',
             'name': ex.name,
             'message': ex.message,
+            'url': document.location,
             'stack': stack
         };
     }
@@ -769,6 +772,7 @@ TraceKit.computeStackTrace = (function () {
             'mode': 'multiline',
             'name': ex.name,
             'message': lines[0],
+            'url': document.location,
             'stack': stack
         };
     }
@@ -898,6 +902,7 @@ TraceKit.computeStackTrace = (function () {
             'mode': 'callers',
             'name': ex.name,
             'message': ex.message,
+            'url': document.location,
             'stack': stack
         };
         augmentStackTraceWithInitialElement(result, ex.sourceURL || ex.fileName, ex.line || ex.lineNumber, ex.message || ex.description);
