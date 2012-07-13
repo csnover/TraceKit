@@ -118,10 +118,11 @@ TraceKit.report = (function () {
             location.func = TraceKit.computeStackTrace.guessFunctionName(location.url, location.line);
             location.context = TraceKit.computeStackTrace.gatherContext(location.url, location.line);
             stack = {
-                'mode': 'onerror',
+            	'mode': 'onerror',
                 'message': message,
-				'url': document.location,
-                'stack': [location]
+				'url': document.location.href,
+                'stack': [location],
+				'useragent' : navigator.userAgent
             };
         }
 
@@ -604,8 +605,9 @@ TraceKit.computeStackTrace = (function () {
             'mode': 'stack',
             'name': ex.name,
             'message': ex.message,
-            'url': document.location,
-            'stack': stack
+            'url': document.location.href,
+            'stack': stack,
+            'useragent': navigator.userAgent
         };
     }
 
@@ -661,8 +663,9 @@ TraceKit.computeStackTrace = (function () {
             'mode': 'stacktrace',
             'name': ex.name,
             'message': ex.message,
-            'url': document.location,
-            'stack': stack
+            'url': document.location.href,
+            'stack': stack,
+            'useragent': navigator.userAgent
         };
     }
 
@@ -772,8 +775,9 @@ TraceKit.computeStackTrace = (function () {
             'mode': 'multiline',
             'name': ex.name,
             'message': lines[0],
-            'url': document.location,
-            'stack': stack
+            'url': document.location.href,
+            'stack': stack,
+            'useragent': navigator.userAgent
         };
     }
 
@@ -902,8 +906,9 @@ TraceKit.computeStackTrace = (function () {
             'mode': 'callers',
             'name': ex.name,
             'message': ex.message,
-            'url': document.location,
-            'stack': stack
+            'url': document.location.href,
+            'stack': stack,
+            'useragent': navigator.userAgent
         };
         augmentStackTraceWithInitialElement(result, ex.sourceURL || ex.fileName, ex.line || ex.lineNumber, ex.message || ex.description);
         return result;
