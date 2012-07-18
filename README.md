@@ -21,11 +21,12 @@ The best software is software that doesn’t generate any unhandled exceptions; 
 
 Tracekit supports:
 
-* Firefox: full stack trace with line numbers, plus column number on top frame; column number is not guaranteed
-* Opera:   full stack trace with line and column numbers
-* Chrome:  full stack trace with line and column numbers
-* Safari:  line and column number for the top frame only; some frames  may be missing, and column number is not guaranteed
-* IE:      line and column number for the top frame only; some frames may be missing, and column number is not guaranteed
+* Firefox:         full stack trace with line numbers, plus column number on top frame; column number is not guaranteed
+* Opera:           full stack trace with line and column numbers
+* Chrome:          full stack trace with line and column numbers
+* Safari:          line and column number for the top frame only; some frames  may be missing, and column number is not guaranteed
+* IE:              line and column number for the top frame only; some frames may be missing, and column number is not guaranteed
+* Android webview: full stack trace with line and column numbers
 
 In theory, TraceKit should work on all of the following versions:
 
@@ -35,6 +36,7 @@ In theory, TraceKit should work on all of the following versions:
 * Safari 3+ (only 4+ tested)
 * Chrome 1+ (only 5+ tested)
 * Konqueror 3.5+ (untested)
+* Android 2.1+ webview (only 2.3+ tested)
 
 ## API 
 
