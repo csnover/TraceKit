@@ -94,12 +94,14 @@ TraceKit.report = (function reportModuleWrapper() {
      */
     function notifyHandlers(stack) {
         var exception = null;
-        for (var i in handlers) {
-            if (_.has(handlers, i)) {
-                try {
-                    handlers[i](stack);
-                } catch (inner) {
-                    exception = inner;
+        if (TraceKit.collectWindowErrors) {
+            for (var i in handlers) {
+                if (_.has(handlers, i)) {
+                    try {
+                        handlers[i](stack);
+                    } catch (inner) {
+                        exception = inner;
+                    }
                 }
             }
         }
@@ -1166,3 +1168,11 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
     };
 
 }(window.jQuery));
+
+//Default options:
+if (!TraceKit.remoteFetching) {
+  TraceKit.remoteFetching = true;
+}
+if (!TraceKit.collectWindowErrors) {
+  TraceKit.collectWindowErrors = true;
+}
