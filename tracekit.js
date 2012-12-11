@@ -259,16 +259,16 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
             if (XMLHttpRequest === undefined) { // IE 5.x-6.x:
                 XMLHttpRequest = function IEXMLHttpRequestSub() {
                     try {
-                        return new ActiveXObject("Msxml2.XMLHTTP.6.0");
+                        return new ActiveXObject('Msxml2.XMLHTTP.6.0');
                     } catch (e) {}
                     try {
-                        return new ActiveXObject("Msxml2.XMLHTTP.3.0");
+                        return new ActiveXObject('Msxml2.XMLHTTP.3.0');
                     } catch (e) {}
                     try {
-                        return new ActiveXObject("Msxml2.XMLHTTP");
+                        return new ActiveXObject('Msxml2.XMLHTTP');
                     } catch (e) {}
                     try {
-                        return new ActiveXObject("Microsoft.XMLHTTP");
+                        return new ActiveXObject('Microsoft.XMLHTTP');
                     } catch (e) {}
                     throw new Error('No XHR.');
                 };
@@ -298,7 +298,7 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
             } else {
                 source = [];
             }
-            sourceCache[url] = source.length ? source.split("\n") : [];
+            sourceCache[url] = source.length ? source.split('\n') : [];
         }
 
         return sourceCache[url];
@@ -402,14 +402,14 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
         for (var i = 0, j = urls.length; i < j; ++i) {
             // console.log('searching', urls[i]);
             if ((source = getSource(urls[i])).length) {
-                source = source.join("\n");
+                source = source.join('\n');
                 if ((m = re.exec(source))) {
                     // console.log('Found function in ' + urls[i]);
 
                     return {
                         'url': urls[i],
-                        'line': source.substring(0, m.index).split("\n").length,
-                        'column': m.index - source.lastIndexOf("\n", m.index) - 1
+                        'line': source.substring(0, m.index).split('\n').length,
+                        'column': m.index - source.lastIndexOf('\n', m.index) - 1
                     };
                 }
             }
@@ -451,7 +451,7 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
      */
     function findSourceByFunctionBody(func) {
         var urls = [window.location.href],
-            scripts = document.getElementsByTagName("script"),
+            scripts = document.getElementsByTagName('script'),
             body,
             code = '' + func,
             codeRE = /^function(?:\s+([\w$]+))?\s*\(([\w\s,]*)\)\s*\{\s*(\S[\s\S]*\S)\s*\}\s*$/,
@@ -475,10 +475,10 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
         // corpus large enough to confirm that and it was in the original.
         else {
             var name = parts[1] ? '\\s+' + parts[1] : '',
-                args = parts[2].split(",").join("\\s*,\\s*");
+                args = parts[2].split(',').join('\\s*,\\s*');
 
             body = escapeRegExp(parts[3]).replace(/;$/, ';?') // semicolon is inserted if the function ends with a comment.replace(/\s+/g, '\\s+');
-            re = new RegExp("function" + name + "\\s*\\(\\s*" + args + "\\s*\\)\\s*{\\s*" + body + "\\s*}");
+            re = new RegExp('function' + name + '\\s*\\(\\s*' + args + '\\s*\\)\\s*{\\s*' + body + '\\s*}');
         }
 
         // look for a normal function definition
@@ -492,7 +492,7 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
             body = escapeCodeAsRegExpForMatchingInsideHTML(parts[2]);
 
             // look for a function defined in HTML as an onXXX handler
-            re = new RegExp("on" + event + '=[\\\'"]\\s*' + body + '\\s*[\\\'"]', 'i');
+            re = new RegExp('on' + event + '=[\\\'"]\\s*' + body + '\\s*[\\\'"]', 'i');
 
             if ((result = findSourceInUrls(re, urls[0]))) {
                 return result;
@@ -558,7 +558,7 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
 
         var chrome = /^\s*at ((?:\[object object\])?\S+) \(((?:file|http|https):.*?):(\d+)(?::(\d+))?\)\s*$/i,
             gecko = /^\s*(\S*)(?:\((.*?)\))?@((?:file|http|https).*?):(\d+)(?::(\d+))?\s*$/i,
-            lines = ex.stack.split("\n"),
+            lines = ex.stack.split('\n'),
             stack = [],
             parts,
             element,
@@ -626,7 +626,7 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
         var stacktrace = ex.stacktrace;
 
         var testRE = / line (\d+), column (\d+) in (?:<anonymous function: ([^>]+)>|([^\)]+))\((.*)\) in (.*):\s*$/i,
-            lines = stacktrace.split("\n"),
+            lines = stacktrace.split('\n'),
             stack = [],
             parts;
 
@@ -735,10 +735,10 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
                 if (script) {
                     source = getSource(item.url);
                     if (source) {
-                        source = source.join("\n");
+                        source = source.join('\n');
                         var pos = source.indexOf(script.innerText);
                         if (pos >= 0) {
-                            item.line = relativeLine + source.substring(0, pos).split("\n").length;
+                            item.line = relativeLine + source.substring(0, pos).split('\n').length;
                         }
                     }
                 }
