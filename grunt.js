@@ -54,4 +54,6 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('default', 'lint watch');
 
+  // Travis-CI task.
+  grunt.registerTask('travis', 'lint');
 };
