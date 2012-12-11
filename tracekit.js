@@ -1004,7 +1004,7 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
     function computeStackTraceOfCaller(depth) {
         depth = (depth === undefined ? 0 : +depth) + 1; // "+ 1" because "ofCaller" should drop one frame
         try {
-            (0)();
+            throw new Error();
         } catch (ex) {
             return computeStackTrace(ex, depth + 1);
         }
