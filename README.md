@@ -48,6 +48,9 @@ TraceKit will attempt to fetch an analyze source files, but you can turn this of
 
     TraceKit.remoteFetching = false
 
+## Contributing
+
+    Grunt is used for linting with JSHint. All code doesn't pass JSHint, but it's useful for spotting errors. Eventually all code will pass JSHint under the given options.
 
 `view the source` comments for more details and examples
 
