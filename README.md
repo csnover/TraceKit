@@ -44,6 +44,13 @@ In theory, TraceKit should work on all of the following versions:
 *   `TraceKit.report.unsubscribe(function(stackInfo) { ... })`
 *   `TraceKit.report(exception)`  (e.g. `try { ...code... } catch(ex) { TraceKit.report(ex); }` )
 
+TraceKit will attempt to fetch an analyze source files, but you can turn this off using:
+
+    TraceKit.remoteFetching = false
+
+## Contributing
+
+Grunt is used for linting with JSHint. All code doesn't pass JSHint yet, but it's useful for spotting errors. Eventually all code will pass JSHint under the options in the Gruntfile.
 
 `view the source` comments for more details and examples
 
