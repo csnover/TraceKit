@@ -878,6 +878,14 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
             item,
             source;
 
+        //from: https://github.com/h5bp/html5-boilerplate/blob/d242bd27cdfaafb7d36c0e1908d7c60bde1e8b67/js/plugins.js
+        if (!arguments.callee) {
+          try {
+            arguments.callee = computeStackTraceByWalkingCallerChain.caller;
+          } catch (e) {
+            
+          }
+        }
         for (var curr = arguments.callee.caller; curr && !recursion; curr = curr.caller) {
             if (curr === computeStackTrace || curr === TraceKit.report) {
                 // console.log('skipping internal function');
