@@ -1,7 +1,7 @@
 TraceKit
 ========
 
-[![Build Status](https://travis-ci.org/occ/TraceKit.png)](https://travis-ci.org/occ/TraceKit)
+[![Build Status](https://travis-ci.org/occ/TraceKit.png?branch=master)](https://travis-ci.org/occ/TraceKit)
 
 ### Tracekit is a JavaScript library that automatically normalizes and exposes stack traces for unhandled exceptions across the 5 major browsers: IE, Firefox, Chrome, Safari, and Opera. ###
 
