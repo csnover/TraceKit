@@ -8,21 +8,15 @@
 var TraceKit = {};
 
 /**
- * Define _.has method if it isn't already defined
- * Example: _.has(MainHostObject, property) === true/false
+ * TraceKit._has, a better form of hasOwnProperty
+ * Example: TraceKit._has(MainHostObject, property) === true/false
  *
  * @param {Object} host object to check property
  * @param {string} key to check
  */
-/*jslint latedef: false*/ //We want well controlled scope with the below code, but want to pass jshint
-if (typeof (_) === 'undefined') {
-  var _ = {
-    has: function has(object, key) {
-      return Object.prototype.hasOwnProperty.call(object, key);
-    }
-  };
-}
-/*jslint latedef: true*/ //Turn back on
+TraceKit._has: function _has(object, key) {
+    return Object.prototype.hasOwnProperty.call(object, key);
+};
 
 /**
  * TraceKit.report: cross-browser processing of unhandled exceptions
@@ -98,7 +92,7 @@ TraceKit.report = (function reportModuleWrapper() {
           return;
         }
         for (var i in handlers) {
-            if (_.has(handlers, i)) {
+            if (TraceKit._has(handlers, i)) {
                 try {
                     handlers[i](stack);
                 } catch (inner) {
@@ -309,7 +303,7 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
      * @return {Array.<string>} Source contents.
      */
     function getSource(url) {
-        if (!_.has(sourceCache, url)) {
+        if (!TraceKit._has(sourceCache, url)) {
             // URL needs to be able to fetched within the acceptable domain.  Otherwise,
             // cross-domain errors will be triggered.
             var source;
@@ -732,7 +726,7 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
             source;
 
         for (i in scripts) {
-            if (_.has(scripts, i) && !scripts[i].src) {
+            if (TraceKit._has(scripts, i) && !scripts[i].src) {
                 inlineScriptBlocks.push(scripts[i]);
             }
         }
