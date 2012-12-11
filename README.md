@@ -50,7 +50,7 @@ TraceKit will attempt to fetch an analyze source files, but you can turn this of
 
 ## Contributing
 
-    Grunt is used for linting with JSHint. All code doesn't pass JSHint, but it's useful for spotting errors. Eventually all code will pass JSHint under the given options.
+Grunt is used for linting with JSHint. All code doesn't pass JSHint yet, but it's useful for spotting errors. Eventually all code will pass JSHint under the options in the Gruntfile.
 
 `view the source` comments for more details and examples
 
