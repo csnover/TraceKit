@@ -118,11 +118,11 @@ TraceKit.report = (function () {
             location.func = TraceKit.computeStackTrace.guessFunctionName(location.url, location.line);
             location.context = TraceKit.computeStackTrace.gatherContext(location.url, location.line);
             stack = {
-            	'mode': 'onerror',
+                'mode': 'onerror',
                 'message': message,
-				'url': document.location.href,
+                'url': document.location.href,
                 'stack': [location],
-				'useragent' : navigator.userAgent
+                'useragent': navigator.userAgent
             };
         }
 
@@ -554,7 +554,7 @@ TraceKit.computeStackTrace = (function () {
             return null;
         }
 
-		var chrome = /^\s*at ((?:\[object object\])?\S+) \(((?:file|http|https):.*?):(\d+)(?::(\d+))?\)\s*$/i,
+        var chrome = /^\s*at ((?:\[object object\])?\S+) \(((?:file|http|https):.*?):(\d+)(?::(\d+))?\)\s*$/i,
             gecko = /^\s*(\S*)(?:\((.*?)\))?@((?:file|http|https).*?):(\d+)(?::(\d+))?\s*$/i,
             lines = ex.stack.split("\n"),
             stack = [],
@@ -1002,33 +1002,34 @@ TraceKit.computeStackTrace = (function () {
 /**
  * Extends support for global error handling for asynchronous browser
  * functions. Adopted from Closure Library's errorhandler.js
- */ (function (w) {
+ */
+(function (w) {
     var _helper = function (fnName) {
-            var originalFn = w[fnName];
-            w[fnName] = function () {
-                // Make a copy of the arguments
-                var args = Array.prototype.slice.call(arguments, 0);
-                var originalCallback = args[0];
-                if (typeof (originalCallback) === 'function') {
-                    args[0] = function () {
-                        try {
-                            originalCallback.apply(this, arguments);
-                        } catch (e) {
-                            TraceKit.report(e);
-                            throw e;
-                        }
-                    };
-                }
-                // IE < 9 doesn't support .call/.apply on setInterval/setTimeout, but it
-                // also only supports 2 argument and doesn't care what "this" is, so we
-                // can just call the original function directly.
-                if (originalFn.apply) {
-                    return originalFn.apply(this, args);
-                } else {
-                    return originalFn(args[0], args[1]);
-                }
-            };
+        var originalFn = w[fnName];
+        w[fnName] = function () {
+            // Make a copy of the arguments
+            var args = Array.prototype.slice.call(arguments, 0);
+            var originalCallback = args[0];
+            if (typeof (originalCallback) === 'function') {
+                args[0] = function () {
+                    try {
+                        originalCallback.apply(this, arguments);
+                    } catch (e) {
+                        TraceKit.report(e);
+                        throw e;
+                    }
+                };
+            }
+            // IE < 9 doesn't support .call/.apply on setInterval/setTimeout, but it
+            // also only supports 2 argument and doesn't care what "this" is, so we
+            // can just call the original function directly.
+            if (originalFn.apply) {
+                return originalFn.apply(this, args);
+            } else {
+                return originalFn(args[0], args[1]);
+            }
         };
+    };
 
     _helper('setTimeout');
     _helper('setInterval');
@@ -1037,7 +1038,8 @@ TraceKit.computeStackTrace = (function () {
 /**
  * Extended support for backtraces and global error handling for most
  * asynchronous jQuery functions.
- */ (function ($) {
+ */
+(function ($) {
 
     // quit if jQuery isn't on the page
     if (!$) {
@@ -1087,13 +1089,13 @@ TraceKit.computeStackTrace = (function () {
     var _oldReady = $.fn.ready;
     $.fn.ready = function (fn) {
         var _fn = function () {
-                try {
-                    return fn.apply(this, arguments);
-                } catch (e) {
-                    TraceKit.report(e);
-                    throw e;
-                }
-            };
+            try {
+                return fn.apply(this, arguments);
+            } catch (e) {
+                TraceKit.report(e);
+                throw e;
+            }
+        };
 
         return _oldReady.call(this, _fn);
     };
