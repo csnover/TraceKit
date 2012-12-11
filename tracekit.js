@@ -47,7 +47,6 @@ var TraceKit = {};
  * TraceKit.computeStackTrace docs.
  */
 TraceKit.report = (function reportModuleWrapper() {
-    'use strict';
     var handlers = [],
         lastException = null,
         lastExceptionStack = null;
@@ -244,7 +243,6 @@ TraceKit.report = (function reportModuleWrapper() {
  *     }
  */
 TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
-    'use strict';
     var debug = false,
         sourceCache = {};
 
