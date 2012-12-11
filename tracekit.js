@@ -492,7 +492,7 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
             var name = parts[1] ? '\\s+' + parts[1] : '',
                 args = parts[2].split(',').join('\\s*,\\s*');
 
-            body = escapeRegExp(parts[3]).replace(/;$/, ';?') // semicolon is inserted if the function ends with a comment.replace(/\s+/g, '\\s+');
+            body = escapeRegExp(parts[3]).replace(/;$/, ';?'); // semicolon is inserted if the function ends with a comment.replace(/\s+/g, '\\s+');
             re = new RegExp('function' + name + '\\s*\\(\\s*' + args + '\\s*\\)\\s*{\\s*' + body + '\\s*}');
         }
 
