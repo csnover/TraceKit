@@ -271,8 +271,10 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
             return '';
         }
         try {
-            if (XMLHttpRequest === undefined) { // IE 5.x-6.x:
-                XMLHttpRequest = function IEXMLHttpRequestSub() {
+            var XMLHttpRequestWrapper;
+
+            if (typeof XMLHttpRequest === 'undefined') { // IE 5.x-6.x:
+                XMLHttpRequestWrapper = function IEXMLHttpRequestSub() {
                     try {
                         return new ActiveXObject('Msxml2.XMLHTTP.6.0');
                     } catch (e) {}
@@ -287,9 +289,11 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
                     } catch (e) {}
                     throw new Error('No XHR.');
                 };
+            } else {
+                XMLHttpRequestWrapper = XMLHttpRequest;
             }
     
-            var request = new XMLHttpRequest();
+            var request = new XMLHttpRequestWrapper();
             request.open('GET', url, false);
             request.send('');
             return request.responseText;
