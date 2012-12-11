@@ -44,6 +44,10 @@ In theory, TraceKit should work on all of the following versions:
 *   `TraceKit.report.unsubscribe(function(stackInfo) { ... })`
 *   `TraceKit.report(exception)`  (e.g. `try { ...code... } catch(ex) { TraceKit.report(ex); }` )
 
+TraceKit will attempt to fetch an analyze source files, but you can turn this off using:
+
+    TraceKit.remoteFetching = false
+
 
 `view the source` comments for more details and examples
 
