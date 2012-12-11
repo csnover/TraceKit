@@ -92,16 +92,17 @@ TraceKit.report = (function reportModuleWrapper() {
      * Dispatch stack information to all handlers.
      * @param {Object.<string, *>} stack
      */
-    function notifyHandlers(stack) {
+    function notifyHandlers(stack, windowError) {
         var exception = null;
-        if (TraceKit.collectWindowErrors) {
-            for (var i in handlers) {
-                if (_.has(handlers, i)) {
-                    try {
-                        handlers[i](stack);
-                    } catch (inner) {
-                        exception = inner;
-                    }
+        if (windowError && !TraceKit.collectWindowErrors) {
+          return;
+        }
+        for (var i in handlers) {
+            if (_.has(handlers, i)) {
+                try {
+                    handlers[i](stack);
+                } catch (inner) {
+                    exception = inner;
                 }
             }
         }
@@ -145,7 +146,7 @@ TraceKit.report = (function reportModuleWrapper() {
             };
         }
 
-        notifyHandlers(stack);
+        notifyHandlers(stack, 'from window.onerror');
 
         if (_oldOnerrorHandler) {
             return _oldOnerrorHandler.apply(this, arguments);
