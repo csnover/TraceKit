@@ -267,33 +267,34 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
      * @return {string} Source contents.
      */
     function loadSource(url) {
-        if (TraceKit.remoteFetching) { //Only attempt request if remoteFetching is on.
-            try {
-                if (XMLHttpRequest === undefined) { // IE 5.x-6.x:
-                    XMLHttpRequest = function IEXMLHttpRequestSub() {
-                        try {
-                            return new ActiveXObject('Msxml2.XMLHTTP.6.0');
-                        } catch (e) {}
-                        try {
-                            return new ActiveXObject('Msxml2.XMLHTTP.3.0');
-                        } catch (e) {}
-                        try {
-                            return new ActiveXObject('Msxml2.XMLHTTP');
-                        } catch (e) {}
-                        try {
-                            return new ActiveXObject('Microsoft.XMLHTTP');
-                        } catch (e) {}
-                        throw new Error('No XHR.');
-                    };
-                }
-    
-                var request = new XMLHttpRequest();
-                request.open('GET', url, false);
-                request.send('');
-                return request.responseText;
-            } catch (e) {
-                return '';
+        if (!TraceKit.remoteFetching) { //Only attempt request if remoteFetching is on.
+            return '';
+        }
+        try {
+            if (XMLHttpRequest === undefined) { // IE 5.x-6.x:
+                XMLHttpRequest = function IEXMLHttpRequestSub() {
+                    try {
+                        return new ActiveXObject('Msxml2.XMLHTTP.6.0');
+                    } catch (e) {}
+                    try {
+                        return new ActiveXObject('Msxml2.XMLHTTP.3.0');
+                    } catch (e) {}
+                    try {
+                        return new ActiveXObject('Msxml2.XMLHTTP');
+                    } catch (e) {}
+                    try {
+                        return new ActiveXObject('Microsoft.XMLHTTP');
+                    } catch (e) {}
+                    throw new Error('No XHR.');
+                };
             }
+    
+            var request = new XMLHttpRequest();
+            request.open('GET', url, false);
+            request.send('');
+            return request.responseText;
+        } catch (e) {
+            return '';
         }
     }
 
