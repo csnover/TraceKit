@@ -46,7 +46,8 @@ var TraceKit = {};
  * Handlers receive a stackInfo object as described in the
  * TraceKit.computeStackTrace docs.
  */
-TraceKit.report = (function () {
+TraceKit.report = (function reportModuleWrapper() {
+    'use strict';
     var handlers = [],
         lastException = null,
         lastExceptionStack = null;
@@ -102,7 +103,7 @@ TraceKit.report = (function () {
      * @param {(number|string)} lineNo The line number at which the error
      * occurred.
      */
-    window.onerror = function (message, url, lineNo) {
+    window.onerror = function traceKitWindowOnError(message, url, lineNo) {
         var stack = null;
 
         if (lastExceptionStack) {
@@ -242,7 +243,8 @@ TraceKit.report = (function () {
  *             alert(data);
  *     }
  */
-TraceKit.computeStackTrace = (function () {
+TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
+    'use strict';
     var debug = false,
         sourceCache = {};
 
@@ -255,7 +257,7 @@ TraceKit.computeStackTrace = (function () {
     function loadSource(url) {
         try {
             if (XMLHttpRequest === undefined) { // IE 5.x-6.x:
-                XMLHttpRequest = function () {
+                XMLHttpRequest = function IEXMLHttpRequestSub() {
                     try {
                         return new ActiveXObject("Msxml2.XMLHTTP.6.0");
                     } catch (e) {}
@@ -291,7 +293,7 @@ TraceKit.computeStackTrace = (function () {
             // URL needs to be able to fetched within the acceptable domain.  Otherwise,
             // cross-domain errors will be triggered.
             var source;
-            if (url.indexOf(document.domain) != -1) {
+            if (url.indexOf(document.domain) !== -1) {
                 source = loadSource(url);
             } else {
                 source = [];
@@ -1003,15 +1005,15 @@ TraceKit.computeStackTrace = (function () {
  * Extends support for global error handling for asynchronous browser
  * functions. Adopted from Closure Library's errorhandler.js
  */
-(function (w) {
-    var _helper = function (fnName) {
+(function extendToAsynchronousCallbacks(w) {
+    var _helper = function _helper(fnName) {
         var originalFn = w[fnName];
-        w[fnName] = function () {
+        w[fnName] = function traceKitAsyncExtension() {
             // Make a copy of the arguments
-            var args = Array.prototype.slice.call(arguments, 0);
+            var args = [].prototype.slice.call(arguments, 0);
             var originalCallback = args[0];
             if (typeof (originalCallback) === 'function') {
-                args[0] = function () {
+                args[0] = function traceKitArgsZero() {
                     try {
                         originalCallback.apply(this, arguments);
                     } catch (e) {
@@ -1039,7 +1041,7 @@ TraceKit.computeStackTrace = (function () {
  * Extended support for backtraces and global error handling for most
  * asynchronous jQuery functions.
  */
-(function ($) {
+(function traceKitAsyncForjQuery($) {
 
     // quit if jQuery isn't on the page
     if (!$) {
@@ -1047,12 +1049,12 @@ TraceKit.computeStackTrace = (function () {
     }
 
     var _oldEventAdd = $.event.add;
-    $.event.add = function (elem, types, handler, data, selector) {
+    $.event.add = function traceKitEventAdd(elem, types, handler, data, selector) {
         var _handler;
 
         if (handler.handler) {
             _handler = handler.handler;
-            handler.handler = function () {
+            handler.handler = function traceKitHandler() {
                 try {
                     return _handler.apply(this, arguments);
                 } catch (e) {
@@ -1062,7 +1064,7 @@ TraceKit.computeStackTrace = (function () {
             };
         } else {
             _handler = handler;
-            handler = function () {
+            handler = function apply_handler() {
                 try {
                     return _handler.apply(this, arguments);
                 } catch (e) {
@@ -1087,7 +1089,7 @@ TraceKit.computeStackTrace = (function () {
     };
 
     var _oldReady = $.fn.ready;
-    $.fn.ready = function (fn) {
+    $.fn.ready = function traceKitjQueryReadyWrapper(fn) {
         var _fn = function () {
             try {
                 return fn.apply(this, arguments);
@@ -1101,10 +1103,10 @@ TraceKit.computeStackTrace = (function () {
     };
 
     var _oldAjax = $.ajax;
-    $.fn.ajax = function (s) {
+    $.fn.ajax = function traceKitAjaxWrapper(s) {
         if ($.isFunction(s.complete)) {
             var _oldComplete = s.complete;
-            s.complete = function () {
+            s.complete = function traceKitjQueryComplete() {
                 try {
                     return _oldComplete.apply(this, arguments);
                 } catch (e) {
@@ -1116,7 +1118,7 @@ TraceKit.computeStackTrace = (function () {
 
         if ($.isFunction(s.error)) {
             var _oldError = s.error;
-            s.error = function () {
+            s.error = function traceKitjQueryError() {
                 try {
                     return _oldError.apply(this, arguments);
                 } catch (e) {
@@ -1128,7 +1130,7 @@ TraceKit.computeStackTrace = (function () {
 
         if ($.isFunction(s.success)) {
             var _oldSuccess = s.success;
-            s.success = function () {
+            s.success = function traceKitjQuerySuccess() {
                 try {
                     return _oldSuccess.apply(this, arguments);
                 } catch (e) {
