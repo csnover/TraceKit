@@ -14,7 +14,7 @@ var TraceKit = {};
  * @param {Object} host object to check property
  * @param {string} key to check
  */
-TraceKit._has: function _has(object, key) {
+TraceKit._has = function _has(object, key) {
     return Object.prototype.hasOwnProperty.call(object, key);
 };
 
