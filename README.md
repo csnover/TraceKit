@@ -48,7 +48,11 @@ In theory, TraceKit should work on all of the following versions:
 
 TraceKit will attempt to fetch an analyze source files, but you can turn this off using:
 
-    TraceKit.remoteFetching = false
+    TraceKit.remoteFetching = false;
+
+You can also tell TraceKit to ignore global window errors with:
+
+    TraceKit.collectWindowErrors = false;
 
 ## Contributing
 
