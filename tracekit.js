@@ -911,7 +911,9 @@ TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
             }
 
             if (funcs['' + curr]) {
-                item.recursion = true;
+                recursion = true;
+            }else{
+                funcs['' + curr] = true;
             }
 
             stack.push(item);
