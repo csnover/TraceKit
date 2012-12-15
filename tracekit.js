@@ -256,7 +256,7 @@ TraceKit.report = (function reportModuleWrapper() {
  *             alert(data);
  *     }
  */
-TraceKit.computeStackTrace = (function computerStackTraceWrapper() {
+TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     var debug = false,
         sourceCache = {};
 
