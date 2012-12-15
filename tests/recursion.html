@@ -1,0 +1,68 @@
+<!--
+If you run this file under IE9, it will make the browser become unresponsive because TraceKit will be stuck in an infinite loop in the function `computeStackTraceByWalkingCallerChain` prior to the fix.
+
+-->
+<!doctype html>
+<html>
+<head>
+<title>TraceKit Recursion Test</title>
+<script src="../tracekit.js"></script>
+<link href="mocha.css" rel="stylesheet">
+<script src="mocha.js"></script>
+<script>
+
+setupTraceKit()
+function setupTraceKit(){
+    function indent(text){
+        return text.split('\n').map(function(line){
+            return '    ' + line
+        }).join('\n')
+    }
+
+    TraceKit.report.subscribe(function(stackInfo){
+        console.log(stackInfo.name + ' : ' + stackInfo.message)
+        var stack = stackInfo.stack
+        if (!stack || stack.length === 0) return
+        if (stack[0].context){
+            console.log(indent(stack[0].context.join('\n')))
+        }
+        for (var i = 0; i < stack.length; i++){
+            var line = stack[i]
+
+            console.log('    at ' + line.func + ' (' + [line.url, line.line, line.column].join(':') + ')')
+        }
+    })
+}
+
+interceptMochaRunner()
+function interceptMochaRunner(){
+    var Runner = mocha.Runner || Mocha.Runner
+    var oEmit = Runner.prototype.emit
+    Runner.prototype.emit = function(evt, test){
+        if (evt === 'test end'){
+            if (test.err) TraceKit.report(test.err)
+        }
+        oEmit.apply(this, arguments)
+    }
+}
+
+</script>
+<script>mocha.setup('bdd')</script>
+<script>
+describe('crash', function(){
+
+    it('it should not go into an infinite loop', function(){
+        throw new Error('Boom!');
+    });
+    
+});
+</script>
+</head>
+<body>
+<h1>TraceKit Recursion Test</h1>
+<div id="mocha"></div>
+<script>
+mocha.run()
+</script>
+</body>
+</html>
