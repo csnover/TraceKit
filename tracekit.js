@@ -369,8 +369,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      */
     function gatherContext(url, line) {
         var source = getSource(url),
-            context = [],
-            hasContext = false;
+            context = [];
 
         if (!source.length) {
             return null;
@@ -378,14 +377,13 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
         line -= 1; // convert to 0-based index
 
-        for (var i = line - 2, j = line + 2; i < j; ++i) {
-            context.push(source[i]);
-            if (source[i] !== undefined) {
-                hasContext = true;
+        for (var i = Math.max(0, line - 2), j = Math.min(source.length, line + 2); i < j; ++i) {
+            if (typeof (source[i]) !== 'undefined') {
+                context.push(source[i]);
             }
         }
 
-        return hasContext ? context : null;
+        return context.length > 0 ? context : null;
     }
 
     /**
