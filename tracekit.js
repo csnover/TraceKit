@@ -378,8 +378,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             // linesBefore & linesAfter are inclusive with the offending line.
             // if linesOfContext is even, there will be one extra line
             //   *before* the offending line.
-            // ProTip: ~~ == Math.floor()
-            linesBefore = ~~(TraceKit.linesOfContext / 2),
+            linesBefore = Math.floor(TraceKit.linesOfContext / 2),
             // Add one extra line if linesOfContext is odd
             linesAfter = linesBefore + (TraceKit.linesOfContext % 2),
             start = Math.max(0, line - linesBefore - 1),
