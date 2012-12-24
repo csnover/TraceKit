@@ -369,16 +369,25 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @return {?Array.<string>} Lines of source code.
      */
     function gatherContext(url, line) {
-        var source = getSource(url),
-            context = [];
+        var source = getSource(url);
 
         if (!source.length) {
             return null;
         }
 
+        var context = [],
+            // linesBefore & linesAfter are inclusive with the offending line.
+            // if linesOfContext is even, there will be one extra line
+            //   *before* the offending line.
+            linesBefore = Math.floor(TraceKit.linesOfContext / 2),
+            // Add one extra line if linesOfContext is odd
+            linesAfter = linesBefore + (TraceKit.linesOfContext % 2),
+            start = Math.max(0, line - linesBefore - 1),
+            end = Math.min(source.length, line + linesAfter - 1);
+
         line -= 1; // convert to 0-based index
 
-        for (var i = Math.max(0, line - 2), j = Math.min(source.length, line + 2); i < j; ++i) {
+        for (var i = start; i < end; ++i) {
             if (typeof (source[i]) !== 'undefined') {
                 context.push(source[i]);
             }
@@ -1176,4 +1185,8 @@ if (!TraceKit.remoteFetching) {
 }
 if (!TraceKit.collectWindowErrors) {
   TraceKit.collectWindowErrors = true;
+}
+if (!TraceKit.linesOfContext || TraceKit.linesOfContext < 1) {
+  // 5 lines before, the offending line, 5 lines after
+  TraceKit.linesOfContext = 11;
 }
