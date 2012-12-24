@@ -94,7 +94,7 @@ TraceKit.report = (function reportModuleWrapper() {
         for (var i in handlers) {
             if (TraceKit._has(handlers, i)) {
                 try {
-                    handlers[i](stack);
+                    handlers[i].apply(null, [stack].concat(Array.prototype.slice.call(arguments, 2)));
                 } catch (inner) {
                     exception = inner;
                 }
@@ -154,6 +154,7 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {Error} ex
      */
     function report(ex) {
+        var args = Array.prototype.slice.call(arguments, 1);
         if (lastExceptionStack) {
             if (lastException === ex) {
                 return; // already caught by an inner catch block, ignore
@@ -161,7 +162,7 @@ TraceKit.report = (function reportModuleWrapper() {
                 var s = lastExceptionStack;
                 lastExceptionStack = null;
                 lastException = null;
-                notifyHandlers(s);
+                notifyHandlers.apply(null, [s, null].concat(args));
             }
         }
 
@@ -177,7 +178,7 @@ TraceKit.report = (function reportModuleWrapper() {
             if (lastException === ex) {
                 lastExceptionStack = null;
                 lastException = null;
-                notifyHandlers(stack);
+                notifyHandlers.apply(null, [stack, null].concat(args));
             }
         }, (stack.incomplete ? 2000 : 0));
 
