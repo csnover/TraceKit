@@ -1,68 +1,94 @@
-TraceKit
-========
+TraceKit - Cross browser stack traces.
+=====================================
 
 [![Build Status](https://travis-ci.org/occ/TraceKit.png?branch=master)](https://travis-ci.org/occ/TraceKit)
 
-### Tracekit is a JavaScript library that automatically normalizes and exposes stack traces for unhandled exceptions across the 5 major browsers: IE, Firefox, Chrome, Safari, and Opera. ###
+### Supports all major browsers, from IE6 to Opera, the Andriod webiew and everywhere in between.
 
-Based on the hard work of [Andrey Tarantsov](http://www.tarantsov.com/).
+Not all browsers support stack traces on error objects, but TraceKit squeezes out as much useful information as possible and normalizes it.
 
-TraceKit:
-
-* leverages native browser support for retrieving stack traces from Error objects where available, and squeezes out as much useful information as possible from browsers that don’t. 
-* integrates neatly with **jQuery**, automatically wrapping all of your event handlers and AJAX callbacks so that you get the most useful stack information possible.
-* attempts to extend support for column-level granularity of the top-most frame to all browsers, in order to allow you to debug even minified JavaScript. This does not work perfectly, and won’t until all browser manufacturers are exposing good stack trace information, but it ought to be more useful than nothing.
-
-Just 8kB minified and 3kB minified + gzipped.
-
-The best software is software that doesn’t generate any unhandled exceptions; I hope TraceKit helps you achieve that goal.
-
-*-Colin Snover*
+3kB minified + gzipped.
 
 
+## Install
 
-Tracekit supports:
+```
+bower install tracekit
+```
+This places TraceKit at `components/tracekit/tracekit.js`. Install [bower](http://twitter.github.com/bower/): `npm install bower -g`, download npm with Node: http://nodejs.org
 
-* Firefox:         full stack trace with line numbers, plus column number on top frame; column number is not guaranteed
-* Opera:           full stack trace with line and column numbers
-* Chrome:          full stack trace with line and column numbers
-* Safari:          line and column number for the top frame only; some frames  may be missing, and column number is not guaranteed
-* IE:              line and column number for the top frame only; some frames may be missing, and column number is not guaranteed
-* Android webview: full stack trace with line and column numbers
+Then add the script to your page
 
-In theory, TraceKit should work on all of the following versions:
+## Usage
 
-* IE5.5+ (only 8.0 tested)
-* Firefox 0.9+ (only 3.5+ tested)
-* Opera 7+ (only 10.50 tested; versions 9 and earlier may require `Exceptions Have Stacktrace` to be enabled in opera:config)
-* Safari 3+ (only 4+ tested)
-* Chrome 1+ (only 5+ tested)
-* Konqueror 3.5+ (untested)
-* Android 2.1+ webview (only 2.3+ tested)
+First, register a subscriber for error reports:
+```javascript
+TraceKit.report.subscribe(function yourLogger(errorReport) {
+  //send via ajax to server, or use console.error in development
+  //to get you started see: https://gist.github.com/4491219
+});
+```
 
-## API 
+Then, make sure all your code is in a try/catch block:
+```javascript
+try {
+  /*
+   * your application code here
+   *
+   */
+  throw new Error('oops');
+} catch (e) {
+  TraceKit.report(e); //error with stack trace gets normalized and sent to subscriber
+}
+```
 
-*   `TraceKit.report.subscribe(function(stackInfo) { ... })`
-*   `TraceKit.report.unsubscribe(function(stackInfo) { ... })`
-*   `TraceKit.report(exception)`  (e.g. `try { ...code... } catch(ex) { TraceKit.report(ex); }` )
+In order to get stack traces, you need to wrap your code in a try/catch block like above. Otherwise the error hits `window.onerror` handler and will only contain the error message, line number, and column number.
+
+You also need to throw errors with `throw new Error('foo')` instead of `throw 'foo'`.
+
+You can unsubscribe some subscriber function by doing `TraceKit.report.unsubscribe(someFunction)`
+
+#### Eliminating (anonymous function)'s
+
+```javascript
+API.foo = function ApiFoo() {
+};
+var bar = function barFn() { //'Fn' is to avoid errors in IE
+};
+```
+
+We recommend the above convention of function naming, `ApiFoo` always corresponds to `API.foo`, `barFn` corresponds to `bar` - just as long as the function name is not the same as the identifier. Otherwise, you can have bugs in IE.
+
+## Options
 
 TraceKit will attempt to fetch an analyze source files, but you can turn this off using:
 
-    TraceKit.remoteFetching = false;
+```javascript
+TraceKit.remoteFetching = false;
+```
 
 You can also tell TraceKit to ignore global window errors with:
 
-    TraceKit.collectWindowErrors = false;
+```javascript
+TraceKit.collectWindowErrors = false;
+```
 
-## Contributing
-
-Grunt is used for linting with JSHint. All code doesn't pass JSHint yet, but it's useful for spotting errors. Eventually all code will pass JSHint under the options in the Gruntfile.
-
-`view the source` comments for more details and examples
-
-[Announcement blog post](http://zetafleet.com/blog/improve-javascript-error-reporting-with-tracekit) in case you'd like to comment.
-
-
+View the source for more details and examples.
 
 ![Stacktrace or GTFO](http://i.imgur.com/jacoj.jpg)
 
+## Contributing
+
+All code must pass JSHint and tests, run `grunt` for this. New features need accompanying documentation in the README, changes to existing api's need updated documentation. In general, open an issue for whatever it is you're thinking, get some quick feedback, make good stuff, and we'll accept the PR.
+
+## License
+
+(The MIT License)
+
+Copyright (c) 2013 Onur Can Cakmak <onur.cakmak@gmail.com> and all TraceKit contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
