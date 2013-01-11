@@ -583,7 +583,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             return null;
         }
 
-        var chrome = /^\s*at ((?:\[object object\])?\S+) \(((?:file|http|https):.*?):(\d+)(?::(\d+))?\)\s*$/i,
+        var chrome = /^\s*at (?:((?:\[object object\])?\S+) )?\(?((?:file|http|https):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
             gecko = /^\s*(\S*)(?:\((.*?)\))?@((?:file|http|https).*?):(\d+)(?::(\d+))?\s*$/i,
             lines = ex.stack.split('\n'),
             stack = [],
@@ -595,7 +595,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             if ((parts = gecko.exec(lines[i]))) {
                 element = {
                     'url': parts[3],
-                    'func': parts[1],
+                    'func': parts[1] || '?',
                     'args': parts[2] ? parts[2].split(',') : '',
                     'line': +parts[4],
                     'column': parts[5] ? +parts[5] : null
@@ -603,7 +603,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             } else if ((parts = chrome.exec(lines[i]))) {
                 element = {
                     'url': parts[2],
-                    'func': parts[1],
+                    'func': parts[1] || '?',
                     'line': +parts[3],
                     'column': parts[4] ? +parts[4] : null
                 };
