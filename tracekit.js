@@ -1129,7 +1129,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     };
 
     var _oldAjax = $.ajax;
-    $.fn.ajax = function traceKitAjaxWrapper(s) {
+    $.ajax = function traceKitAjaxWrapper(s) {
         if ($.isFunction(s.complete)) {
             var _oldComplete = s.complete;
             s.complete = function traceKitjQueryComplete() {
