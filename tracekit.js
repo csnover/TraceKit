@@ -2,7 +2,21 @@
  TraceKit - Cross brower stack traces - github.com/occ/TraceKit
  MIT license
 */
+
+;(function(window, undefined) {
+
+
 var TraceKit = {};
+var _oldTraceKit = window.TraceKit;
+
+/**
+ * TraceKit.noConflict: Export TraceKit out to another variable
+ * Example: var TK = TraceKit.noConflict()
+ */
+TraceKit.noConflict = function noConflict() {
+    window.TraceKit = _oldTraceKit;
+    return TraceKit;
+};
 
 /**
  * TraceKit._has, a better form of hasOwnProperty
@@ -1187,3 +1201,10 @@ if (!TraceKit.linesOfContext || TraceKit.linesOfContext < 1) {
   // 5 lines before, the offending line, 5 lines after
   TraceKit.linesOfContext = 11;
 }
+
+
+
+// Export to global object
+window.TraceKit = TraceKit;
+
+}(window));
