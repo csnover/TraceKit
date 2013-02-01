@@ -5,9 +5,8 @@ TraceKit - Cross browser stack traces.
 
 ### Supports all major browsers, from IE6 to Opera, the Andriod webiew and everywhere in between.
 
-Not all browsers support stack traces on error objects, but TraceKit squeezes out as much useful information as possible and normalizes it.
-
-3kB minified + gzipped.
+Not all browsers support stack traces on error objects, but TraceKit squeezes
+out as much useful information as possible and normalizes it. 3kB minified + gzipped
 
 
 ## Install
@@ -17,7 +16,7 @@ bower install tracekit
 ```
 This places TraceKit at `components/tracekit/tracekit.js`. Install [bower](http://twitter.github.com/bower/): `npm install bower -g`, download npm with Node: http://nodejs.org
 
-Then add the script to your page
+Then include the `<script>` to your page
 
 ## Usage
 
@@ -51,13 +50,13 @@ You can unsubscribe some subscriber function by doing `TraceKit.report.unsubscri
 #### Eliminating (anonymous function)'s
 
 ```javascript
-API.foo = function ApiFoo() {
+Api.foo = function Api_foo() {
 };
 var bar = function barFn() { //'Fn' is to avoid errors in IE
 };
 ```
 
-We recommend the above convention of function naming, `ApiFoo` always corresponds to `API.foo`, `barFn` corresponds to `bar` - just as long as the function name is not the same as the identifier. Otherwise, you can have bugs in IE.
+We recommend the above convention of function naming, `Api_foo` always corresponds to `Api.foo`, `barFn` corresponds to `bar` - just as long as the function name is not the same as the identifier. Otherwise, you can have bugs in IE.
 
 ## Options
 
