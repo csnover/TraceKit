@@ -276,7 +276,8 @@ TraceKit.report = (function reportModuleWrapper() {
  *     }
  */
 TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
-    var sourceCache = {};
+    var debug = false,
+        sourceCache = {};
 
     /**
      * Attempts to retrieve source code via XMLHttpRequest, which is used
