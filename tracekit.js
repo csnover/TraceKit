@@ -39,7 +39,7 @@ TraceKit._has = function _has(object, key) {
 TraceKit.wrap = function traceKitWrapper(func) {
     function wrapped() {
         try {
-            return fn.apply(this, arguments);
+            return func.apply(this, arguments);
         } catch (e) {
             TraceKit.report(e);
             throw e;
