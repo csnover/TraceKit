@@ -30,6 +30,25 @@ TraceKit._has = function _has(object, key) {
 };
 
 /**
+ * TraceKit.wrap: Wrap any function in a TraceKit reporter
+ * Example: func = TraceKit.wrap(func);
+ *
+ * @param {Function} func Function to be wrapped
+ * @return {Function} The wrapped func
+ */
+TraceKit.wrap = function traceKitWrapper(func) {
+    function wrapped() {
+        try {
+            return func.apply(this, arguments);
+        } catch (e) {
+            TraceKit.report(e);
+            throw e;
+        }
+    }
+    return wrapped;
+};
+
+/**
  * TraceKit.report: cross-browser processing of unhandled exceptions
  *
  * Syntax:
@@ -1040,14 +1059,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             var args = Array.prototype.slice.call(arguments, 0);
             var originalCallback = args[0];
             if (typeof (originalCallback) === 'function') {
-                args[0] = function traceKitArgsZero() {
-                    try {
-                        originalCallback.apply(this, arguments);
-                    } catch (e) {
-                        TraceKit.report(e);
-                        throw e;
-                    }
-                };
+                args[0] = TraceKit.wrap(originalCallback);
             }
             // IE < 9 doesn't support .call/.apply on setInterval/setTimeout, but it
             // also only supports 2 argument and doesn't care what "this" is, so we
@@ -1081,24 +1093,10 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
         if (handler.handler) {
             _handler = handler.handler;
-            handler.handler = function traceKitHandler() {
-                try {
-                    return _handler.apply(this, arguments);
-                } catch (e) {
-                    TraceKit.report(e);
-                    throw e;
-                }
-            };
+            handler.handler = TraceKit.wrap(handler.handler);
         } else {
             _handler = handler;
-            handler = function apply_handler() {
-                try {
-                    return _handler.apply(this, arguments);
-                } catch (e) {
-                    TraceKit.report(e);
-                    throw e;
-                }
-            };
+            handler = TraceKit.wrap(handler);
         }
 
         // If the handler we are attaching doesn’t have the same guid as
@@ -1117,54 +1115,16 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
     var _oldReady = $.fn.ready;
     $.fn.ready = function traceKitjQueryReadyWrapper(fn) {
-        var _fn = function () {
-            try {
-                return fn.apply(this, arguments);
-            } catch (e) {
-                TraceKit.report(e);
-                throw e;
-            }
-        };
-
-        return _oldReady.call(this, _fn);
+        return _oldReady.call(this, TraceKit.wrap(fn));
     };
 
     var _oldAjax = $.ajax;
     $.ajax = function traceKitAjaxWrapper(s) {
-        if ($.isFunction(s.complete)) {
-            var _oldComplete = s.complete;
-            s.complete = function traceKitjQueryComplete() {
-                try {
-                    return _oldComplete.apply(this, arguments);
-                } catch (e) {
-                    TraceKit.report(e);
-                    throw e;
-                }
-            };
-        }
-
-        if ($.isFunction(s.error)) {
-            var _oldError = s.error;
-            s.error = function traceKitjQueryError() {
-                try {
-                    return _oldError.apply(this, arguments);
-                } catch (e) {
-                    TraceKit.report(e);
-                    throw e;
-                }
-            };
-        }
-
-        if ($.isFunction(s.success)) {
-            var _oldSuccess = s.success;
-            s.success = function traceKitjQuerySuccess() {
-                try {
-                    return _oldSuccess.apply(this, arguments);
-                } catch (e) {
-                    TraceKit.report(e);
-                    throw e;
-                }
-            };
+        var keys = ['complete', 'error', 'success'], key;
+        while(key = keys.pop()) {
+            if ($.isFunction(s[key])) {
+                s[key] = TraceKit.wrap(s[key]);
+            }
         }
 
         try {
