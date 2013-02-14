@@ -9,6 +9,24 @@
 var TraceKit = {};
 var _oldTraceKit = window.TraceKit;
 
+var UNKNOWN_FUNCTION = '?';
+
+
+/**
+ * _has, a better form of hasOwnProperty
+ * Example: _has(MainHostObject, property) === true/false
+ *
+ * @param {Object} host object to check property
+ * @param {string} key to check
+ */
+function _has(object, key) {
+    return Object.prototype.hasOwnProperty.call(object, key);
+}
+
+function _isUndefined(what) {
+    return typeof what === 'undefined';
+}
+
 /**
  * TraceKit.noConflict: Export TraceKit out to another variable
  * Example: var TK = TraceKit.noConflict()
@@ -16,17 +34,6 @@ var _oldTraceKit = window.TraceKit;
 TraceKit.noConflict = function noConflict() {
     window.TraceKit = _oldTraceKit;
     return TraceKit;
-};
-
-/**
- * TraceKit._has, a better form of hasOwnProperty
- * Example: TraceKit._has(MainHostObject, property) === true/false
- *
- * @param {Object} host object to check property
- * @param {string} key to check
- */
-TraceKit._has = function _has(object, key) {
-    return Object.prototype.hasOwnProperty.call(object, key);
 };
 
 /**
@@ -103,7 +110,7 @@ TraceKit.report = (function reportModuleWrapper() {
           return;
         }
         for (var i in handlers) {
-            if (TraceKit._has(handlers, i)) {
+            if (_has(handlers, i)) {
                 try {
                     handlers[i].apply(null, [stack].concat(Array.prototype.slice.call(arguments, 2)));
                 } catch (inner) {
@@ -307,16 +314,14 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @return {Array.<string>} Source contents.
      */
     function getSource(url) {
-        if (!TraceKit._has(sourceCache, url)) {
+        if (!_has(sourceCache, url)) {
             // URL needs to be able to fetched within the acceptable domain.  Otherwise,
             // cross-domain errors will be triggered.
-            var source;
+            var source = '';
             if (url.indexOf(document.domain) !== -1) {
                 source = loadSource(url);
-            } else {
-                source = [];
             }
-            sourceCache[url] = source.length ? source.split('\n') : [];
+            sourceCache[url] = source ? source.split('\n') : [];
         }
 
         return sourceCache[url];
@@ -339,7 +344,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             m;
 
         if (!source.length) {
-            return '?';
+            return UNKNOWN_FUNCTION;
         }
 
         // Walk backwards from the first line in the function until we find the line which
@@ -347,7 +352,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         for (var i = 0; i < maxLines; ++i) {
             line = source[lineNo - i] + line;
 
-            if (line !== undefined) {
+            if (!_isUndefined(line)) {
                 if ((m = reGuessFunction.exec(line))) {
                     return m[1];
                 } else if ((m = reFunctionArgNames.exec(line))) {
@@ -356,7 +361,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             }
         }
 
-        return '?';
+        return UNKNOWN_FUNCTION;
     }
 
     /**
@@ -386,7 +391,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         line -= 1; // convert to 0-based index
 
         for (var i = start; i < end; ++i) {
-            if (typeof (source[i]) !== 'undefined') {
+            if (!_isUndefined(source[i])) {
                 context.push(source[i]);
             }
         }
@@ -593,7 +598,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             if ((parts = gecko.exec(lines[i]))) {
                 element = {
                     'url': parts[3],
-                    'func': parts[1] || '?',
+                    'func': parts[1] || UNKNOWN_FUNCTION,
                     'args': parts[2] ? parts[2].split(',') : '',
                     'line': +parts[4],
                     'column': parts[5] ? +parts[5] : null
@@ -601,7 +606,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             } else if ((parts = chrome.exec(lines[i]))) {
                 element = {
                     'url': parts[2],
-                    'func': parts[1] || '?',
+                    'func': parts[1] || UNKNOWN_FUNCTION,
                     'line': +parts[3],
                     'column': parts[4] ? +parts[4] : null
                 };
@@ -737,7 +742,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             source;
 
         for (i in scripts) {
-            if (TraceKit._has(scripts, i) && !scripts[i].src) {
+            if (_has(scripts, i) && !scripts[i].src) {
                 inlineScriptBlocks.push(scripts[i]);
             }
         }
@@ -891,7 +896,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
             item = {
                 'url': null,
-                'func': '?',
+                'func': UNKNOWN_FUNCTION,
                 'line': null,
                 'column': null
             };
@@ -906,7 +911,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                 item.url = source.url;
                 item.line = source.line;
 
-                if (item.func === '?') {
+                if (item.func === UNKNOWN_FUNCTION) {
                     item.func = guessFunctionName(item.url, item.line);
                 }
 
