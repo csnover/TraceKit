@@ -9,6 +9,8 @@
 var TraceKit = {};
 var _oldTraceKit = window.TraceKit;
 
+// global reference to slice
+var _slice = [].slice;
 var UNKNOWN_FUNCTION = '?';
 
 
@@ -131,7 +133,7 @@ TraceKit.report = (function reportModuleWrapper() {
         for (var i in handlers) {
             if (_has(handlers, i)) {
                 try {
-                    handlers[i].apply(null, [stack].concat(Array.prototype.slice.call(arguments, 2)));
+                    handlers[i].apply(null, [stack].concat(_slice.call(arguments, 2)));
                 } catch (inner) {
                     exception = inner;
                 }
@@ -191,7 +193,7 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {Error} ex
      */
     function report(ex) {
-        var args = Array.prototype.slice.call(arguments, 1);
+        var args = _slice.call(arguments, 1);
         if (lastExceptionStack) {
             if (lastException === ex) {
                 return; // already caught by an inner catch block, ignore
@@ -1056,12 +1058,12 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
  * Extends support for global error handling for asynchronous browser
  * functions. Adopted from Closure Library's errorhandler.js
  */
-(function extendToAsynchronousCallbacks(w) {
+(function extendToAsynchronousCallbacks() {
     var _helper = function _helper(fnName) {
-        var originalFn = w[fnName];
-        w[fnName] = function traceKitAsyncExtension() {
+        var originalFn = window[fnName];
+        window[fnName] = function traceKitAsyncExtension() {
             // Make a copy of the arguments
-            var args = Array.prototype.slice.call(arguments, 0);
+            var args = _slice.call(arguments);
             var originalCallback = args[0];
             if (typeof (originalCallback) === 'function') {
                 args[0] = TraceKit.wrap(originalCallback);
@@ -1079,7 +1081,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
     _helper('setTimeout');
     _helper('setInterval');
-}(window));
+}());
 
 /**
  * Extended support for backtraces and global error handling for most
