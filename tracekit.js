@@ -1126,16 +1126,27 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     };
 
     var _oldAjax = $.ajax;
-    $.ajax = function traceKitAjaxWrapper(s) {
+    $.ajax = function traceKitAjaxWrapper(url, options) {
         var keys = ['complete', 'error', 'success'], key;
+
+        // Taken from https://github.com/jquery/jquery/blob/eee2eaf1d7a189d99106423a4206c224ebd5b848/src/ajax.js#L311-L318
+        // If url is an object, simulate pre-1.5 signature
+        if (typeof url === 'object') {
+            options = url;
+            url = undefined;
+        }
+
+        // Force options to be an object
+        options = options || {};
+
         while(key = keys.pop()) {
-            if ($.isFunction(s[key])) {
-                s[key] = TraceKit.wrap(s[key]);
+            if ($.isFunction(options[key])) {
+                options[key] = TraceKit.wrap(options[key]);
             }
         }
 
         try {
-            return _oldAjax.call(this, s);
+            return _oldAjax.call(this, url, options);
         } catch (e) {
             TraceKit.report(e);
             throw e;
