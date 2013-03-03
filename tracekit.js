@@ -146,7 +146,7 @@ TraceKit.report = (function reportModuleWrapper() {
         }
     }
 
-    var _oldOnerrorHandler;
+    var _oldOnerrorHandler, _onErrorHandlerInstalled;
 
     /**
      * Ensures all global unhandled exceptions are recorded.
@@ -191,11 +191,12 @@ TraceKit.report = (function reportModuleWrapper() {
 
     function installGlobalHandler ()
     {
-        if (window.onerror === traceKitWindowOnError) {
+        if (_onErrorHandlerInstalled === true) {
             return;
         }
         _oldOnerrorHandler = window.onerror;
         window.onerror = traceKitWindowOnError;
+        _onErrorHandlerInstalled = true;
     }
 
     /**
