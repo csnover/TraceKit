@@ -3,7 +3,7 @@
  MIT license
 */
 
-;(function(window, undefined) {
+(function(window, undefined) {
 
 
 var TraceKit = {};
@@ -322,7 +322,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             return '';
         }
         try {
-            function getXHR() {
+            var getXHR = function() {
                 try {
                     return new window.XMLHttpRequest();
                 } catch (e) {
@@ -1053,8 +1053,6 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         } catch (ex) {
             return computeStackTrace(ex, depth + 1);
         }
-
-        return null;
     }
 
     computeStackTrace.augmentStackTraceWithInitialElement = augmentStackTraceWithInitialElement;
