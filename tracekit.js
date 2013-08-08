@@ -329,7 +329,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                     // explicitly bubble up the exception if not found
                     return new window.ActiveXObject('Microsoft.XMLHTTP');
                 }
-            }
+            };
 
             var request = getXHR();
             request.open('GET', url, false);
