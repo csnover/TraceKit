@@ -1,0 +1,6 @@
+language: node_js
+node_js:
+  - 0.10.15
+before_script:
+  - wget http://closure-compiler.googlecode.com/files/compiler-latest.zip
+  - unzip compiler-latest.zip -d closure
