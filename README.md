@@ -78,8 +78,6 @@ View the source for more details and examples.
 
 ## Contributing
 
-Right now the project is being over-hauled, please jump into #shieldjs on freenode to discuss before submitting a big/medium PR (this saves us all time)
-
 All code must pass JSHint and tests, run `grunt` for this. New features need accompanying documentation in the README, changes to existing api's need updated documentation. In general, open an issue for whatever it is you're thinking, get some quick feedback, make good stuff, and we'll accept the PR.
 
 ## License
