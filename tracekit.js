@@ -1,5 +1,5 @@
 /*
- TraceKit - Cross brower stack traces - github.com/occ/TraceKit
+ TraceKit - Cross brower stack traces - github.com/csnover/TraceKit
  MIT license
 */
 
