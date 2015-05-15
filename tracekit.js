@@ -3,6 +3,7 @@
  MIT license
 */
 
+var global;
 (function(window, undefined) {
 
 

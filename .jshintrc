@@ -28,7 +28,6 @@
     "maxdepth": 9,
     "maxerr": 20,
     "globals": {
-        "ActiveXObject": false,
-        "global": false
+        "ActiveXObject": false
     }
 }
