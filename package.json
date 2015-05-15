@@ -2,10 +2,10 @@
     "name": "TraceKit",
     "version": "0.1.1",
     "devDependencies": {
-        "grunt": "~0.4.1",
-        "grunt-contrib-jshint": "~0.6.2",
-        "grunt-cli": "~0.1.9",
-        "grunt-closure-tools": "~0.8.3"
+        "grunt": "~0.4.5",
+        "grunt-contrib-jshint": "~0.11.2",
+        "grunt-cli": "~0.1.13",
+        "grunt-closure-tools": "~0.9.8"
     },
     "scripts": {
         "test": "grunt --verbose travis"
