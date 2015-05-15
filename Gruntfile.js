@@ -10,7 +10,7 @@ module.exports = function (grunt) {
                 compilerOpts: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     warning_level: 'verbose',
-                    jscomp_off: ['checkTypes', 'fileoverviewTags'],
+                    jscomp_off: ['checkTypes', 'checkVars', 'fileoverviewTags'],
                     summary_detail_level: 3,
                     output_wrapper: '"(function(){%output%}).call(this);"'
                 },

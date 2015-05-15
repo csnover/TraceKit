@@ -3,9 +3,10 @@
  MIT license
 */
 
-var global;
 (function(window, undefined) {
-
+if (!window) {
+    return;
+}
 
 var TraceKit = {};
 var _oldTraceKit = window.TraceKit;
