@@ -18,7 +18,7 @@ var UNKNOWN_FUNCTION = '?';
  * _has, a better form of hasOwnProperty
  * Example: _has(MainHostObject, property) === true/false
  *
- * @param {Object} host object to check property
+ * @param {Object} object to check property
  * @param {string} key to check
  */
 function _has(object, key) {
@@ -1109,4 +1109,4 @@ if (!TraceKit.linesOfContext || TraceKit.linesOfContext < 1) {
 // Export to global object
 window.TraceKit = TraceKit;
 
-}(window));
+}(typeof window !== 'undefined' ? window : global));
