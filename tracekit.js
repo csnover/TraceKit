@@ -158,28 +158,35 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {(number|string)} lineNo The line number at which the error
      * occurred.
      */
-    function traceKitWindowOnError(message, url, lineNo) {
+    function traceKitWindowOnError(message, url, lineNo, columnNo, errorObj) {
         var stack = null;
 
-        if (lastExceptionStack) {
-            TraceKit.computeStackTrace.augmentStackTraceWithInitialElement(lastExceptionStack, url, lineNo, message);
-            stack = lastExceptionStack;
-            lastExceptionStack = null;
-            lastException = null;
-        } else {
-            var location = {
-                'url': url,
-                'line': lineNo
-            };
-            location.func = TraceKit.computeStackTrace.guessFunctionName(location.url, location.line);
-            location.context = TraceKit.computeStackTrace.gatherContext(location.url, location.line);
-            stack = {
-                'mode': 'onerror',
-                'message': message,
-                'url': document.location.href,
-                'stack': [location],
-                'useragent': navigator.userAgent
-            };
+        if (errorObj) {
+          stack = TraceKit.computeStackTrace(errorObj);
+        }
+        else
+        {
+            if (lastExceptionStack) {
+                TraceKit.computeStackTrace.augmentStackTraceWithInitialElement(lastExceptionStack, url, lineNo, message);
+                stack = lastExceptionStack;
+                lastExceptionStack = null;
+                lastException = null;
+            } else {
+                var location = {
+                    'url': url,
+                    'line': lineNo,
+                    'column': columnNo
+                };
+                location.func = TraceKit.computeStackTrace.guessFunctionName(location.url, location.line);
+                location.context = TraceKit.computeStackTrace.gatherContext(location.url, location.line);
+                stack = {
+                    'mode': 'onerror',
+                    'message': message,
+                    'url': document.location.href,
+                    'stack': [location],
+                    'useragent': navigator.userAgent
+                };
+            }
         }
 
         notifyHandlers(stack, 'from window.onerror');
