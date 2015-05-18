@@ -1099,7 +1099,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
  * Extends support for global error handling for asynchronous browser
  * functions. Adopted from Closure Library's errorhandler.js
  */
-(function extendToAsynchronousCallbacks() {
+TraceKit.extendToAsynchronousCallbacks = function () {
     var _helper = function _helper(fnName) {
         var originalFn = window[fnName];
         window[fnName] = function traceKitAsyncExtension() {
@@ -1122,7 +1122,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
     _helper('setTimeout');
     _helper('setInterval');
-}());
+};
 
 //Default options:
 if (!TraceKit.remoteFetching) {
