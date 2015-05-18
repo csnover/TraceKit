@@ -1,0 +1,22 @@
+{
+  "name": "TraceKit",
+  "main": "TraceKit.js",
+  "version": "0.2.0",
+  "homepage": "https://github.com/csnover/TraceKit",
+  "description": "Cross browser stack traces",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "TraceKit",
+    "stack traces"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
