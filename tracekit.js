@@ -128,9 +128,9 @@ TraceKit.report = (function reportModuleWrapper() {
      * Dispatch stack information to all handlers.
      * @param {Object.<string, *>} stack
      */
-    function notifyHandlers(stack, windowError) {
+    function notifyHandlers(stack, isWindowError) {
         var exception = null;
-        if (windowError && !TraceKit.collectWindowErrors) {
+        if (isWindowError && !TraceKit.collectWindowErrors) {
           return;
         }
         for (var i in handlers) {
@@ -157,6 +157,9 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {string} url URL of script that generated the exception.
      * @param {(number|string)} lineNo The line number at which the error
      * occurred.
+     * @param {?(number|string)} columnNo The column number at which the error
+     * occurred.
+     * @param {?Error} errorObj The actual Error object.
      */
     function traceKitWindowOnError(message, url, lineNo, columnNo, errorObj) {
         var stack = null;
@@ -330,7 +333,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         if (typeof url !== 'string') {
           return [];
         }
-        
+
         if (!TraceKit.remoteFetching) { //Only attempt request if remoteFetching is on.
             return '';
         }
@@ -602,6 +605,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     // ex.message = qq is not defined
     // ex.fileName = http://...
     // ex.lineNumber = 59
+    // ex.columnNumber = 69
     // ex.stack = ...stack trace... (see the example below)
     // ex.name = ReferenceError
     //
@@ -633,8 +637,8 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             return null;
         }
 
-        var chrome = /^\s*at (.*?) ?\(?((?:file|http|https|chrome-extension):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
-            gecko = /^\s*(.*?)(?:\((.*?)\))?@?((?:file|http|https|chrome):.*?):(\d+)(?::(\d+))?\s*$/i,
+        var chrome = /^\s*at (.*?) ?\(?((?:file|https?|chrome-extension):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
+            gecko = /^\s*(.*?)(?:\((.*?)\))?@((?:file|https?|chrome).*?):(\d+)(?::(\d+))?\s*$/i,
             winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:ms-appx|http|https):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
             lines = ex.stack.split('\n'),
             stack = [],
@@ -680,15 +684,17 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             stack.push(element);
         }
 
-        if (stack[0] && stack[0].line && !stack[0].column && reference) {
-            stack[0].column = findSourceInLine(reference[1], stack[0].url, stack[0].line);
-        } else if (!stack[0].column && typeof ex.columnNumber !== 'undefined') {
-            // Firefox column number
-            stack[0].column = ex.columnNumber + 1;
-        }
-
         if (!stack.length) {
             return null;
+        }
+
+        if (stack[0] && stack[0].line && !stack[0].column && reference) {
+            stack[0].column = findSourceInLine(reference[1], stack[0].url, stack[0].line);
+        } else if (!stack[0].column && !_isUndefined(ex.columnNumber)) {
+            // FireFox uses this awesome columnNumber property for its top frame
+            // Also note, Firefox's column number is 0-based and everything else expects 1-based,
+            // so adding 1
+            stack[0].column = ex.columnNumber + 1;
         }
 
         return {
@@ -788,8 +794,8 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             return null;
         }
 
-        var lineRE1 = /^\s*Line (\d+) of linked script ((?:file|http|https)\S+)(?:: in function (\S+))?\s*$/i,
-            lineRE2 = /^\s*Line (\d+) of inline#(\d+) script in ((?:file|http|https)\S+)(?:: in function (\S+))?\s*$/i,
+        var lineRE1 = /^\s*Line (\d+) of linked script ((?:file|https?)\S+)(?:: in function (\S+))?\s*$/i,
+            lineRE2 = /^\s*Line (\d+) of inline#(\d+) script in ((?:file|https?)\S+)(?:: in function (\S+))?\s*$/i,
             lineRE3 = /^\s*Line (\d+) of function script\s*$/i,
             stack = [],
             scripts = document.getElementsByTagName('script'),
