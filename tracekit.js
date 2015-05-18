@@ -330,10 +330,6 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @return {string} Source contents.
      */
     function loadSource(url) {
-        if (typeof url !== 'string') {
-          return [];
-        }
-
         if (!TraceKit.remoteFetching) { //Only attempt request if remoteFetching is on.
             return '';
         }
@@ -362,6 +358,10 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @return {Array.<string>} Source contents.
      */
     function getSource(url) {
+        if (typeof url !== 'string') {
+            return [];
+        }
+
         if (!_has(sourceCache, url)) {
             // URL needs to be able to fetched within the acceptable domain.  Otherwise,
             // cross-domain errors will be triggered.
