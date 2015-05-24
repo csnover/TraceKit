@@ -973,7 +973,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
             if (typeof item.func === 'undefined') {
               try {
-                item.func = parts.input.substring(0, parts.input.indexOf('{'))
+                item.func = parts.input.substring(0, parts.input.indexOf('{'));
               } catch (e) { }
             }
 
