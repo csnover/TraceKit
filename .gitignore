@@ -2,3 +2,4 @@
 node_modules/
 TraceKit.iml
 /closure
+/tracekit.min.js
