@@ -78,7 +78,9 @@ View the source for more details and examples.
 
 ## Contributing
 
-All code must pass JSHint and tests, run `grunt` for this. New features need accompanying documentation in the README, changes to existing api's need updated documentation. In general, open an issue for whatever it is you're thinking, get some quick feedback, make good stuff, and we'll accept the PR.
+All code must pass JSHint and tests.
+Run `grunt` to compile and run JSHint and `grunt test` for the test suite. New features need accompanying documentation in the README, changes to existing api's need updated documentation.
+In general, open an issue for whatever it is you're thinking, get some quick feedback, make good stuff, and we'll accept the PR.
 
 ## License
 

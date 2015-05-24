@@ -33,11 +33,19 @@ module.exports = function (grunt) {
                     'tracekit.js'
                 ]
             }
-        }
+        },
+        jasmine : {
+            src : 'tracekit.js',
+            options : {
+                specs : 'TraceKit-spec.js'
+            }
+          },
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-closure-tools');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
     grunt.registerTask('default', ['jshint:lint', 'closureCompiler:compile']);
+    grunt.registerTask('test', ['jasmine']);
 };
