@@ -1,5 +1,6 @@
 .idea/
 node_modules/
+bower_components/
 TraceKit.iml
 /closure
 /tracekit.min.js
