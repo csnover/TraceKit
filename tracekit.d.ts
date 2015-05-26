@@ -68,6 +68,13 @@ declare module TraceKit {
      * @return {Object.<string, *>} Stack trace information.
      */
     ofCaller:(depth:string|number) => StackTrace;
+
+    /**
+     * Retrieves source code from the source code cache.
+     * @param {string} url URL of source code.
+     * @return {Array.<string>} Source contents.
+     */
+     getSource:(url:string) => string[];
   }
 
   export interface Report {
