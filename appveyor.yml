@@ -17,9 +17,3 @@ build_script:
 
 test_script:
   - grunt test
-
-notifications:
-  - provider: Slack
-    auth_token:
-      secure: PigIGGo7UUDwdb0KGM/s7OfpAng/OMJx7q33jKfzudFBiXi1EBEd0DRmkbCc7CiX
-    channel: notifications
