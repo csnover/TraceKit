@@ -18,11 +18,12 @@
     "license": "MIT",
     "devDependencies": {
         "grunt": "~0.4.5",
-        "grunt-contrib-jshint": "~0.11.2",
         "grunt-cli": "~0.1.13",
-        "grunt-closure-tools": "~0.9.8"
+        "grunt-closure-tools": "~0.9.8",
+        "grunt-contrib-jasmine": "^0.8.2",
+        "grunt-contrib-jshint": "~0.11.2"
     },
     "scripts": {
-        "test": "grunt --verbose travis"
+        "test": "grunt test"
     }
 }
