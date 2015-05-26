@@ -74,7 +74,7 @@ declare module TraceKit {
      * @param {string} url URL of source code.
      * @return {Array.<string>} Source contents.
      */
-     getSource:(url:string) => string[];
+    getSource:(url:string) => string[];
   }
 
   export interface Report {

@@ -79,9 +79,15 @@ View the source for more details and examples.
 ## Contributing
 
 All code must pass JSHint and tests.
-Run `grunt` to compile and run JSHint and `grunt test` for the test suite. To run the test suite in a browser, run `bower install` and then open Tests.html in the browser you want to test.
+Run `grunt` to compile and run JSHint and `grunt test` for the test suite.
 New features need accompanying documentation in the README, changes to existing api's need updated documentation.
 In general, open an issue for whatever it is you're thinking, get some quick feedback, make good stuff, and we'll accept the PR.
+
+Before building (minifying) you will need to get the closure compiler jar:
+```
+wget http://dl.google.com/closure-compiler/compiler-latest.zip
+unzip compiler-latest.zip -d closure
+```
 
 ## License
 

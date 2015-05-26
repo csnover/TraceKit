@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     'use strict';
 
     grunt.initConfig({
-        'closureCompiler': {
+        closureCompiler: {
             options: {
                 compilerFile: './closure/compiler.jar',
                 checkModified: true,
@@ -18,7 +18,7 @@ module.exports = function (grunt) {
                     maxBuffer: 200 * 1024
                 }
             },
-            'compile': {
+            compile: {
                 src: './tracekit.js',
                 dest: './tracekit.min.js'
             }
@@ -35,17 +35,17 @@ module.exports = function (grunt) {
             }
         },
         jasmine : {
-            src : 'tracekit.js',
-            options : {
-                specs : 'TraceKit-spec.js'
+            src: 'tracekit.js',
+            options: {
+                specs: 'tracekit-spec.js'
             }
-          },
+        }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-closure-tools');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
-    grunt.registerTask('default', ['jshint:lint', 'closureCompiler:compile']);
     grunt.registerTask('test', ['jasmine']);
+    grunt.registerTask('default', ['jshint:lint', 'closureCompiler:compile', 'test']);
 };
