@@ -47,5 +47,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-closure-tools');
 
     grunt.registerTask('test', ['jasmine']);
-    grunt.registerTask('default', ['jshint:lint', 'closureCompiler:compile', 'test']);
+    grunt.registerTask('default', ['jshint:lint', 'closureCompiler:compile']);
 };

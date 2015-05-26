@@ -1,0 +1,23 @@
+version: 0.2.0.{build}
+
+environment:
+  nodejs_version: "0.10"
+
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - npm install -g grunt-cli
+  - npm install
+
+build_script:
+  - appveyor DownloadFile "http://dl.google.com/closure-compiler/compiler-latest.zip" -FileName compiler-latest.zip
+  - 7z x compiler-latest.zip -o closure -y
+  - grunt default
+
+test_script:
+  - grunt test
+
+notifications:
+  - provider: Slack
+    auth_token:
+      secure: PigIGGo7UUDwdb0KGM/s7OfpAng/OMJx7q33jKfzudFBiXi1EBEd0DRmkbCc7CiX
+    channel: notifications
