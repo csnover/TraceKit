@@ -8,9 +8,11 @@ install:
   - npm install -g grunt-cli
   - npm install
 
-build_script:
+before_build:
   - appveyor DownloadFile "http://dl.google.com/closure-compiler/compiler-latest.zip" -FileName compiler-latest.zip
   - 7z x compiler-latest.zip -o closure -y
+  
+build_script:
   - grunt default
 
 test_script:
