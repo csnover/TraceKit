@@ -1,6 +1,6 @@
 {
   "name": "tracekit",
-  "main": "TraceKit.js",
+  "main": "traceKit.js",
   "version": "0.2.0",
   "homepage": "https://github.com/csnover/TraceKit",
   "description": "Cross browser stack traces",
