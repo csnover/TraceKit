@@ -2,8 +2,6 @@
     'use strict';
 
     describe('Parser', function() {
-        //TraceKit.linesOfContext = 0;
-
         function foo() {
             return bar();
         }
@@ -32,7 +30,6 @@
 
         it('should parse Safari 6 Error.stack', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.SAFARI_6);
-            console.log(JSON.stringify(stackFrames));
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
             expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 48, column: null, context: null });
@@ -111,9 +108,9 @@
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.OPERA_927);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 43, column: null, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 31, column: null, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 18, column: null, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 43, column: null, context: [ '    bar(n - 1);' ] });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 31, column: null, context: [ '    bar(2);' ] });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 18, column: null, context: [ '    foo();' ] });
         });
 
         it('should parse Opera 10 Error messages', function () {

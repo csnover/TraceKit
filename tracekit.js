@@ -660,6 +660,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                 element = {
                     'url': parts[2],
                     'func': parts[1] || UNKNOWN_FUNCTION,
+                    'args': '',
                     'line': +parts[3],
                     'column': parts[4] ? +parts[4] : null
                 };
@@ -667,6 +668,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
               element = {
                 'url': parts[2],
                 'func': parts[1] || UNKNOWN_FUNCTION,
+                'args': '',
                 'line': +parts[3],
                 'column': parts[4] ? +parts[4] : null
               };
@@ -818,12 +820,17 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                 item = {
                     'url': parts[2],
                     'func': parts[3],
-                    'line': +parts[1]
+                    'args': '',
+                    'line': +parts[1],
+                    'column': null
                 };
             } else if ((parts = lineRE2.exec(lines[i]))) {
                 item = {
                     'url': parts[3],
-                    'func': parts[4]
+                    'func': parts[4],
+                    'args': '',
+                    'line': null,
+                    'column': null
                 };
                 var relativeLine = (+parts[1]); // relative to the start of the <SCRIPT> block
                 var script = inlineScriptBlocks[parts[2] - 1];
@@ -844,8 +851,10 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                 source = findSourceInUrls(re, [url]);
                 item = {
                     'url': url,
+                    'func': '',
+                    'args': '',
                     'line': source ? source.line : line,
-                    'func': ''
+                    'column': null
                 };
             }
 
@@ -962,6 +971,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             item = {
                 'url': null,
                 'func': UNKNOWN_FUNCTION,
+                'args': '',
                 'line': null,
                 'column': null
             };
