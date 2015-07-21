@@ -37,8 +37,7 @@ module.exports = function (grunt) {
         jasmine : {
             src: [
                 'tracekit.js',
-                'spec/fixtures/captured-errors.js',
-                'spec/spec-helper.js'
+                'spec/fixtures/captured-errors.js'
             ],
             options: {
                 specs: 'spec/*-spec.js'
