@@ -26,27 +26,27 @@
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.SAFARI_6);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 48, column: null, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'dumpException3', args: '', line: 52, column: null, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'onclick', args: '', line: 82, column: null, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 48, column: null, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'dumpException3', args: [], line: 52, column: null, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'onclick', args: [], line: 82, column: null, context: null });
         });
 
         it('should parse Safari 7 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.SAFARI_7);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 48, column: 22, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 52, column: 15, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 108, column: 107, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 48, column: 22, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 52, column: 15, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 108, column: 107, context: null });
         });
 
         it('should parse Safari 8 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.SAFARI_8);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 47, column: 22, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 52, column: 15, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 108, column: 23, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 47, column: 22, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 52, column: 15, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 108, column: 23, context: null });
         });
 
         it('should parse Safari 8 eval error', function () {
@@ -54,51 +54,51 @@
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.SAFARI_8);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
-            expect(stackFrames.stack[0]).toEqual({ url: '[native code]', func: 'eval', args: '', line: null, column: null, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 58, column: 21, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 109, column: 91, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: '[native code]', func: 'eval', args: [], line: null, column: null, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 58, column: 21, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 109, column: 91, context: null });
         });
 
         it('should parse Firefox 3 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.FIREFOX_3);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(7);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: '?', args: '', line: 44, column: null, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: '?', args: [], line: 44, column: null, context: null });
             expect(stackFrames.stack[1]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: '?', args: ['null'], line: 31, column: null, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: 'printStackTrace', args: '', line: 18, column: null, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: 'printStackTrace', args: [], line: 18, column: null, context: null });
             expect(stackFrames.stack[3]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: 'bar', args: ['1'], line: 13, column: null, context: null });
             expect(stackFrames.stack[4]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: 'bar', args: ['2'], line: 16, column: null, context: null });
-            expect(stackFrames.stack[5]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: 'foo', args: '', line: 20, column: null, context: null });
-            expect(stackFrames.stack[6]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: '?', args: '', line: 24, column: null, context: null });
+            expect(stackFrames.stack[5]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: 'foo', args: [], line: 20, column: null, context: null });
+            expect(stackFrames.stack[6]).toEqual({ url: 'http://127.0.0.1:8000/js/stacktrace.js', func: '?', args: [], line: 24, column: null, context: null });
         });
 
         it('should parse Firefox 7 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.FIREFOX_7);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(7);
-            expect(stackFrames.stack[0]).toEqual({ url: 'file:///G:/js/file.js', func: '?', args: '', line: 44, column: null, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'file:///G:/js/file.js', func: '?', args: [], line: 44, column: null, context: null });
             expect(stackFrames.stack[1]).toEqual({ url: 'file:///G:/js/file.js', func: '?', args: ['null'], line: 31, column: null, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'file:///G:/js/file.js', func: 'printStackTrace', args: '', line: 18, column: null, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'file:///G:/js/file.js', func: 'printStackTrace', args: [], line: 18, column: null, context: null });
             expect(stackFrames.stack[3]).toEqual({ url: 'file:///G:/js/file.js', func: 'bar', args: ['1'], line: 13, column: null, context: null });
             expect(stackFrames.stack[4]).toEqual({ url: 'file:///G:/js/file.js', func: 'bar', args: ['2'], line: 16, column: null, context: null });
-            expect(stackFrames.stack[5]).toEqual({ url: 'file:///G:/js/file.js', func: 'foo', args: '', line: 20, column: null, context: null });
-            expect(stackFrames.stack[6]).toEqual({ url: 'file:///G:/js/file.js', func: '?', args: '', line: 24, column: null, context: null });
+            expect(stackFrames.stack[5]).toEqual({ url: 'file:///G:/js/file.js', func: 'foo', args: [], line: 20, column: null, context: null });
+            expect(stackFrames.stack[6]).toEqual({ url: 'file:///G:/js/file.js', func: '?', args: [], line: 24, column: null, context: null });
         });
 
         it('should parse Firefox 14 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.FIREFOX_14);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(2);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'dumpException3', args: '', line: 48, column: null, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'onclick', args: '', line: 1, column: null, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'dumpException3', args: [], line: 48, column: null, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'onclick', args: [], line: 1, column: null, context: null });
         });
 
         it('should parse Firefox 31 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.FIREFOX_31);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(2);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 41, column: 13, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 1, column: 1, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 41, column: 13, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 1, column: 1, context: null });
         });
 
         it('should parse Chrome error with no location', function () {
@@ -111,18 +111,18 @@
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.CHROME_15);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(4);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 13, column: 17, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 16, column: 5, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 20, column: 5, context: null });
-            expect(stackFrames.stack[3]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 24, column: 4, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 13, column: 17, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 16, column: 5, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 20, column: 5, context: null });
+            expect(stackFrames.stack[3]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 24, column: 4, context: null });
         });
 
         it('should parse Chrome 36 error with port numbers', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.CHROME_36);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(2);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://localhost:8080/file.js', func: 'dumpExceptionerror', args: '', line: 41, column: 27, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://localhost:8080/file.js', func: 'HTMLButtonElement.onclick', args: '', line: 107, column: 146, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://localhost:8080/file.js', func: 'dumpExceptionerror', args: [], line: 41, column: 27, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://localhost:8080/file.js', func: 'HTMLButtonElement.onclick', args: [], line: 107, column: 146, context: null });
         });
 
         it('should not parse IE 9 error', function() {
@@ -136,9 +136,9 @@
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
             // TODO: func should be normalized
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'Anonymous function', args: '', line: 48, column: 13, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 46, column: 9, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 82, column: 1, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'Anonymous function', args: [], line: 48, column: 13, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 46, column: 9, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 82, column: 1, context: null });
         });
 
         it('should parse IE 11 error', function () {
@@ -146,9 +146,9 @@
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
             // TODO: func should be normalized
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'Anonymous function', args: '', line: 47, column: 21, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 45, column: 13, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 108, column: 1, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'Anonymous function', args: [], line: 47, column: 21, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 45, column: 13, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 108, column: 1, context: null });
         });
 
 
@@ -156,69 +156,69 @@
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.IE_11_EVAL);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
-            expect(stackFrames.stack[0]).toEqual({ url: 'eval code', func: 'eval code', args: '', line: 1, column: 1, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 58, column: 17, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 109, column: 1, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'eval code', func: 'eval code', args: [], line: 1, column: 1, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 58, column: 17, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 109, column: 1, context: null });
         });
 
-        it('should parse Opera 8.54 error messages', function () {
+        it('should parse Opera 8.54 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.OPERA_854);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(7);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 44, column: null, context: [ '    this.undef();' ] });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 31, column: null, context: [ '    ex = ex || this.createException();' ] });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 18, column: null, context: [ '    var p = new printStackTrace.implementation(), result = p.run(ex);' ] });
-            expect(stackFrames.stack[3]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 4, column: null, context: [ '    printTrace(printStackTrace());' ] });
-            expect(stackFrames.stack[4]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 7, column: null, context: [ '    bar(n - 1);' ] });
-            expect(stackFrames.stack[5]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 11, column: null, context: [ '    bar(2);' ] });
-            expect(stackFrames.stack[6]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 15, column: null, context: [ '    foo();' ] });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 44, column: null, context: [ '    this.undef();' ] });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 31, column: null, context: [ '    ex = ex || this.createException();' ] });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 18, column: null, context: [ '    var p = new printStackTrace.implementation(), result = p.run(ex);' ] });
+            expect(stackFrames.stack[3]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 4, column: null, context: [ '    printTrace(printStackTrace());' ] });
+            expect(stackFrames.stack[4]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 7, column: null, context: [ '    bar(n - 1);' ] });
+            expect(stackFrames.stack[5]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 11, column: null, context: [ '    bar(2);' ] });
+            expect(stackFrames.stack[6]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 15, column: null, context: [ '    foo();' ] });
         });
 
         it('should parse Opera 9.02 error', function () {
-            var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.OPERA_927);
+            var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.OPERA_902);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(7);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 44, column: null, context: [ '    this.undef();' ] });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 31, column: null, context: [ '    ex = ex || this.createException();' ] });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 18, column: null, context: [ '    var p = new printStackTrace.implementation(), result = p.run(ex);' ] });
-            expect(stackFrames.stack[3]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 4, column: null, context: [ '    printTrace(printStackTrace());' ] });
-            expect(stackFrames.stack[4]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 7, column: null, context: [ '    bar(n - 1);' ] });
-            expect(stackFrames.stack[5]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 11, column: null, context: [ '    bar(2);' ] });
-            expect(stackFrames.stack[6]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 15, column: null, context: [ '    foo();' ] });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 44, column: null, context: [ '    this.undef();' ] });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 31, column: null, context: [ '    ex = ex || this.createException();' ] });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 18, column: null, context: [ '    var p = new printStackTrace.implementation(), result = p.run(ex);' ] });
+            expect(stackFrames.stack[3]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 4, column: null, context: [ '    printTrace(printStackTrace());' ] });
+            expect(stackFrames.stack[4]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 7, column: null, context: [ '    bar(n - 1);' ] });
+            expect(stackFrames.stack[5]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 11, column: null, context: [ '    bar(2);' ] });
+            expect(stackFrames.stack[6]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 15, column: null, context: [ '    foo();' ] });
         });
 
         it('should parse Opera 9.27 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.OPERA_927);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 43, column: null, context: [ '    bar(n - 1);' ] });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 31, column: null, context: [ '    bar(2);' ] });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 18, column: null, context: [ '    foo();' ] });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 43, column: null, context: [ '    bar(n - 1);' ] });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 31, column: null, context: [ '    bar(2);' ] });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 18, column: null, context: [ '    foo();' ] });
         });
 
         it('should parse Opera 9.64 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.OPERA_964);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(6);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 27, column: null, context: [ '            ex = ex || this.createException();' ] });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'printStackTrace', args: '', line: 18, column: null, context: [ '        var p = new printStackTrace.implementation(), result = p.run(ex);' ] });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 4, column: null, context: [ '             printTrace(printStackTrace());' ] });
-            expect(stackFrames.stack[3]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 7, column: null, context: [ '           bar(n - 1);' ] });
-            expect(stackFrames.stack[4]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 11, column: null, context: [ '           bar(2);' ] });
-            expect(stackFrames.stack[5]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 15, column: null, context: [ '         foo();' ] });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 27, column: null, context: [ '            ex = ex || this.createException();' ] });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'printStackTrace', args: [], line: 18, column: null, context: [ '        var p = new printStackTrace.implementation(), result = p.run(ex);' ] });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 4, column: null, context: [ '             printTrace(printStackTrace());' ] });
+            expect(stackFrames.stack[3]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 7, column: null, context: [ '           bar(n - 1);' ] });
+            expect(stackFrames.stack[4]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 11, column: null, context: [ '           bar(2);' ] });
+            expect(stackFrames.stack[5]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 15, column: null, context: [ '         foo();' ] });
         });
 
         it('should parse Opera 10 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.OPERA_10);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(7);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 42, column: null, context: [ '                this.undef();' ] });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 27, column: null, context: [ '            ex = ex || this.createException();' ] });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'printStackTrace', args: '', line: 18, column: null, context: [ '        var p = new printStackTrace.implementation(), result = p.run(ex);' ] });
-            expect(stackFrames.stack[3]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 4, column: null, context: [ '             printTrace(printStackTrace());' ] });
-            expect(stackFrames.stack[4]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 7, column: null, context: [ '           bar(n - 1);' ] });
-            expect(stackFrames.stack[5]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 11, column: null, context: [ '           bar(2);' ] });
-            expect(stackFrames.stack[6]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 15, column: null, context: [ '         foo();' ] });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 42, column: null, context: [ '                this.undef();' ] });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 27, column: null, context: [ '            ex = ex || this.createException();' ] });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'printStackTrace', args: [], line: 18, column: null, context: [ '        var p = new printStackTrace.implementation(), result = p.run(ex);' ] });
+            expect(stackFrames.stack[3]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 4, column: null, context: [ '             printTrace(printStackTrace());' ] });
+            expect(stackFrames.stack[4]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 7, column: null, context: [ '           bar(n - 1);' ] });
+            expect(stackFrames.stack[5]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 11, column: null, context: [ '           bar(2);' ] });
+            expect(stackFrames.stack[6]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 15, column: null, context: [ '         foo();' ] });
         });
 
         it('should parse Opera 11 error', function () {
@@ -248,9 +248,9 @@
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.OPERA_25);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
-            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: '', line: 47, column: 22, context: null });
-            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: '', line: 52, column: 15, context: null });
-            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: '', line: 108, column: 168, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 47, column: 22, context: null });
+            expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 52, column: 15, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 108, column: 168, context: null });
         });
     });
 })();
