@@ -712,7 +712,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
     /**
      * Computes stack trace information from the stacktrace property.
-     * Opera 10 uses this property.
+     * Opera 9+ uses this property.
      * @param {Error} ex
      * @return {?Object.<string, *>} Stack trace information.
      */
@@ -721,14 +721,17 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         // else to it because Opera is not very good at providing it
         // reliably in other circumstances.
         var stacktrace = ex.stacktrace;
+        if (!stacktrace) {
+            return;
+        }
 
-        var testRE = / line (\d+), column (\d+) in (?:<anonymous function: ([^>]+)>|([^\)]+))\((.*)\) in (.*):\s*$/i,
+        var testRE = / line (\d+), column (\d+)\s*(?:in (?:<anonymous function: ([^>]+)>|([^\)]+))\((.*)\))? in (.*):\s*$/i,
             lines = stacktrace.split('\n'),
             stack = [],
             parts;
 
-        for (var i = 0, j = lines.length; i < j; i += 2) {
-            if ((parts = testRE.exec(lines[i]))) {
+        for (var line = 0; line < lines.length; line += 2) {
+            if ((parts = testRE.exec(lines[line]))) {
                 var element = {
                     'line': +parts[1],
                     'column': +parts[2],
@@ -747,7 +750,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                 }
 
                 if (!element.context) {
-                    element.context = [lines[i + 1]];
+                    element.context = [lines[line + 1]];
                 }
 
                 stack.push(element);
