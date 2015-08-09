@@ -731,7 +731,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         for (var line = 0; line < lines.length; line += 2) {
             var element = null;
             if ((parts = opera10Regex.exec(lines[line]))) {
-                var element = {
+                element = {
                     'url': parts[2],
                     'line': +parts[1],
                     'column': null,
@@ -739,7 +739,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                     'args':[]
                 };
             } else if ((parts = opera11Regex.exec(lines[line]))) {
-                var element = {
+                element = {
                     'url': parts[6],
                     'line': +parts[1],
                     'column': +parts[2],
@@ -816,14 +816,14 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             inlineScriptBlocks = [],
             parts;
 
-        for (var script in scripts) {
-            if (_has(scripts, script) && !scripts[script].src) {
-                inlineScriptBlocks.push(scripts[script]);
+        for (var s in scripts) {
+            if (_has(scripts, s) && !scripts[s].src) {
+                inlineScriptBlocks.push(scripts[s]);
             }
         }
 
         for (var line = 2; line < lines.length; line += 2) {
-            var item = null;
+            var item, source;
             if ((parts = lineRE1.exec(lines[line]))) {
                 item = {
                     'url': parts[2],
@@ -855,7 +855,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             } else if ((parts = lineRE3.exec(lines[line]))) {
                 var url = window.location.href.replace(/#.*$/, '');
                 var re = new RegExp(escapeCodeAsRegExpForMatchingInsideHTML(lines[line + 1]));
-                var source = findSourceInUrls(re, [url]);
+                source = findSourceInUrls(re, [url]);
                 item = {
                     'url': url,
                     'func': '',
