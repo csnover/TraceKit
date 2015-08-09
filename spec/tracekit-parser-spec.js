@@ -25,10 +25,11 @@
         it('should parse Safari 6 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.SAFARI_6);
             expect(stackFrames).toBeTruthy();
-            expect(stackFrames.stack.length).toBe(3);
+            expect(stackFrames.stack.length).toBe(4);
             expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: '?', args: [], line: 48, column: null, context: null });
             expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'dumpException3', args: [], line: 52, column: null, context: null });
             expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'onclick', args: [], line: 82, column: null, context: null });
+            expect(stackFrames.stack[3]).toEqual({ url: '[native code]', func: '?', args: [], line: null, column: null });
         });
 
         it('should parse Safari 7 error', function () {
@@ -54,7 +55,7 @@
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.SAFARI_8_EVAL);
             expect(stackFrames).toBeTruthy();
             expect(stackFrames.stack.length).toBe(3);
-            expect(stackFrames.stack[0]).toEqual({ url: '[native code]', func: 'eval', args: [], line: null, column: null, context: null });
+            expect(stackFrames.stack[0]).toEqual({ url: '[native code]', func: 'eval', args: [], line: null, column: null });
             expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 58, column: 21, context: null });
             expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 109, column: 91, context: null });
         });
