@@ -823,7 +823,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         }
 
         for (var line = 2; line < lines.length; line += 2) {
-            var item, source;
+            var item = null;
             if ((parts = lineRE1.exec(lines[line]))) {
                 item = {
                     'url': parts[2],
@@ -843,7 +843,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                 var relativeLine = (+parts[1]); // relative to the start of the <SCRIPT> block
                 var script = inlineScriptBlocks[parts[2] - 1];
                 if (script) {
-                    source = getSource(item.url);
+                    var source = getSource(item.url);
                     if (source) {
                         source = source.join('\n');
                         var pos = source.indexOf(script.innerText);
@@ -855,12 +855,12 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             } else if ((parts = lineRE3.exec(lines[line]))) {
                 var url = window.location.href.replace(/#.*$/, '');
                 var re = new RegExp(escapeCodeAsRegExpForMatchingInsideHTML(lines[line + 1]));
-                source = findSourceInUrls(re, [url]);
+                var src = findSourceInUrls(re, [url]);
                 item = {
                     'url': url,
                     'func': '',
                     'args': [],
-                    'line': source ? source.line : parts[1],
+                    'line': src ? src.line : parts[1],
                     'column': null
                 };
             }

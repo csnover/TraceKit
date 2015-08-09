@@ -130,7 +130,7 @@
         it('should parse empty IE 9 error', function() {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.IE_9);
             expect(stackFrames).toBeTruthy();
-            expect(stackFrames.stack.length).toBe(0);
+            stackFrames.stack && expect(stackFrames.stack.length).toBe(0);
         });
 
         it('should parse IE 10 error', function () {
