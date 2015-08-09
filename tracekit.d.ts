@@ -2,7 +2,7 @@ declare module TraceKit {
   export interface StackFrame {
     url:string;
     func:string;
-    args:string|string[];
+    args:string[];
     line:number;
     column:number;
     context:string[];
