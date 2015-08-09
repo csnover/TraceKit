@@ -185,9 +185,7 @@ TraceKit.report = (function reportModuleWrapper() {
                 stack = {
                     'mode': 'onerror',
                     'message': message,
-                    'url': document.location.href,
-                    'stack': [location],
-                    'useragent': navigator.userAgent
+                    'stack': [location]
                 };
             }
         }
@@ -705,9 +703,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             'mode': 'stack',
             'name': ex.name,
             'message': ex.message,
-            'url': document.location.href,
-            'stack': stack,
-            'useragent': navigator.userAgent
+            'stack': stack
         };
     }
 
@@ -778,9 +774,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             'mode': 'stacktrace',
             'name': ex.name,
             'message': ex.message,
-            'url': document.location.href,
-            'stack': stack,
-            'useragent': navigator.userAgent
+            'stack': stack
         };
     }
 
@@ -894,9 +888,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             'mode': 'multiline',
             'name': ex.name,
             'message': lines[0],
-            'url': document.location.href,
-            'stack': stack,
-            'useragent': navigator.userAgent
+            'stack': stack
         };
     }
 
@@ -1034,9 +1026,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             'mode': 'callers',
             'name': ex.name,
             'message': ex.message,
-            'url': document.location.href,
-            'stack': stack,
-            'useragent': navigator.userAgent
+            'stack': stack
         };
         augmentStackTraceWithInitialElement(result, ex.sourceURL || ex.fileName, ex.line || ex.lineNumber, ex.message || ex.description);
         return result;
