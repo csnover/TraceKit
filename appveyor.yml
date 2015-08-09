@@ -11,9 +11,12 @@ install:
 before_build:
   - appveyor DownloadFile "http://dl.google.com/closure-compiler/compiler-latest.zip" -FileName compiler-latest.zip
   - 7z e compiler-latest.zip closure
-  
+
 build_script:
   - grunt default
 
 test_script:
   - grunt test
+
+artifacts:
+  - path: tracekit*.*
