@@ -35,9 +35,12 @@ module.exports = function (grunt) {
             }
         },
         jasmine : {
-            src: 'tracekit.js',
+            src: [
+                'tracekit.js',
+                'spec/fixtures/captured-errors.js'
+            ],
             options: {
-                specs: 'tracekit-spec.js'
+                specs: 'spec/*-spec.js'
             }
         }
     });
