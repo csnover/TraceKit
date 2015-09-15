@@ -21,7 +21,12 @@
     "grunt-cli": "~0.1.13",
     "grunt-closure-tools": "~0.9.9",
     "grunt-contrib-jasmine": "^0.8.2",
-    "grunt-contrib-jshint": "~0.11.2"
+    "grunt-contrib-jshint": "~0.11.2",
+    "jasmine": "^2.3.2",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.13.9",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-jasmine": "^0.3.6"
   },
   "scripts": {
     "test": "grunt test"
