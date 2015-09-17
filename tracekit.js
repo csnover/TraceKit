@@ -655,7 +655,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                     'line': parts[3] ? +parts[3] : null,
                     'column': parts[4] ? +parts[4] : null
                 };
-            } else if ((parts = winjs.exec(lines[i]))) {
+            } else if ( parts = winjs.exec(lines[i]) ) {
                 element = {
                     'url': parts[2],
                     'func': parts[1] || UNKNOWN_FUNCTION,
