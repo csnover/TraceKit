@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "removeComments": true,
+    "sourceMap": false,
+    "target": "es3"
+  },
+  "files": [
+    "window.ts"
+  ],
+  "bundles": {
+    "window": {
+      "files": [
+        "window.ts"
+      ]
+    }
+  }
+}

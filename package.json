@@ -4,6 +4,16 @@
   "version": "0.3.0",
   "homepage": "https://github.com/csnover/TraceKit",
   "description": "Cross browser stack traces",
+  "license": "MIT",
+  "jspm": {
+    "main": "dist/exceptionless.js"
+  },
+  "scripts": {
+    "prepublish": "tsd reinstall -s",
+    "start": "gulp",
+    "build": "gulp build",
+    "test": "gulp test"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/csnover/TraceKit.git"
@@ -15,20 +25,27 @@
     "TraceKit",
     "stack traces"
   ],
-  "license": "MIT",
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-cli": "~0.1.13",
-    "grunt-closure-tools": "~0.9.9",
-    "grunt-contrib-jasmine": "^0.8.2",
-    "grunt-contrib-jshint": "~0.11.2",
-    "jasmine": "^2.3.2",
-    "jasmine-core": "^2.3.4",
-    "karma": "^0.13.9",
-    "karma-chrome-launcher": "^0.2.0",
-    "karma-jasmine": "^0.3.6"
-  },
-  "scripts": {
-    "test": "grunt test"
+    "bower": "1.6.3",
+    "del": "2.0.2",
+    "es5-shim": "4.1.15",
+    "es6-shim": "0.33.6",
+    "gulp": "3.9.0",
+    "gulp-concat": "2.6.0",
+    "gulp-karma": "0.0.5",
+    "gulp-replace": "0.5.4",
+    "gulp-sourcemaps": "1.6.0",
+    "gulp-tslint": "^3.3.1",
+    "gulp-uglify": "1.4.2",
+    "gulp-wrap-umd": "0.2.1",
+    "jasmine-core": "2.3.4",
+    "karma": "0.13.11",
+    "karma-cli": "0.1.1",
+    "karma-jasmine": "0.3.6",
+    "karma-phantomjs-launcher": "0.2.1",
+    "phantomjs": "^1.9.18",
+    "rimraf": "2.4.3",
+    "tsproject": "1.0.1",
+    "typescript": "1.6.2"
   }
 }
