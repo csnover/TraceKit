@@ -300,3 +300,16 @@ CapturedExceptions.IE_11_EVAL = {
     description: "'getExceptionProps' is undefined",
     number: -2146823279
 };
+
+CapturedExceptions.CHROME_48_BLOB = {
+    message: "Error: test",
+    name: "Error",
+    stack: "Error: test\n" +
+    "    at Error (native)\n" +
+    "    at s (blob:http%3A//localhost%3A8080/abfc40e9-4742-44ed-9dcd-af8f99a29379:31:29146)\n" +
+    "    at Object.d [as add] (blob:http%3A//localhost%3A8080/abfc40e9-4742-44ed-9dcd-af8f99a29379:31:30039)\n" +
+    "    at blob:http%3A//localhost%3A8080/d4eefe0f-361a-4682-b217-76587d9f712a:15:10978\n" +
+    "    at blob:http%3A//localhost%3A8080/abfc40e9-4742-44ed-9dcd-af8f99a29379:1:6911\n" +
+    "    at n.fire (blob:http%3A//localhost%3A8080/abfc40e9-4742-44ed-9dcd-af8f99a29379:7:3019)\n" +
+    "    at n.handle (blob:http%3A//localhost%3A8080/abfc40e9-4742-44ed-9dcd-af8f99a29379:7:2863)"
+};

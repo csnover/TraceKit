@@ -127,6 +127,14 @@
             expect(stackFrames.stack[1]).toEqual({ url: 'http://localhost:8080/file.js', func: 'HTMLButtonElement.onclick', args: [], line: 107, column: 146, context: null });
         });
 
+        it('should parse Chrome error with blob URLs', function () {
+            var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.CHROME_48_BLOB);
+            expect(stackFrames).toBeTruthy();
+            console.log(stackFrames);
+            expect(stackFrames.stack.length).toBe(7);
+            expect(stackFrames.stack[1]).toEqual({ url: 'blob:http%3A//localhost%3A8080/abfc40e9-4742-44ed-9dcd-af8f99a29379', func: 's', args: [], line: 31, column: 29146, context: null });
+        });
+
         it('should parse empty IE 9 error', function() {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.IE_9);
             expect(stackFrames).toBeTruthy();
