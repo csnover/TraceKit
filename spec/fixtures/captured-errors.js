@@ -170,7 +170,8 @@ CapturedExceptions.CHROME_36 = {
     name: "Error",
     stack: "Error: Default error\n" +
     "    at dumpExceptionError (http://localhost:8080/file.js:41:27)\n" +
-    "    at HTMLButtonElement.onclick (http://localhost:8080/file.js:107:146)"
+    "    at HTMLButtonElement.onclick (http://localhost:8080/file.js:107:146)\n" +
+    "    at I.e.fn.(anonymous function) [as index] (http://localhost:8080/file.js:10:3651)"
 };
 
 CapturedExceptions.FIREFOX_3 = {
@@ -216,6 +217,7 @@ CapturedExceptions.FIREFOX_31 = {
     name: "Error",
     stack: "foo@http://path/to/file.js:41:13\n" +
     "bar@http://path/to/file.js:1:1\n" +
+    ".plugin/e.fn[c]/<@http://path/to/file.js:1:1\n" +
     "",
     fileName: "http://path/to/file.js",
     lineNumber: 41,
