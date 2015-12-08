@@ -98,9 +98,10 @@
         it('should parse Firefox 31 error', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.FIREFOX_31);
             expect(stackFrames).toBeTruthy();
-            expect(stackFrames.stack.length).toBe(2);
+            expect(stackFrames.stack.length).toBe(3);
             expect(stackFrames.stack[0]).toEqual({ url: 'http://path/to/file.js', func: 'foo', args: [], line: 41, column: 13, context: null });
             expect(stackFrames.stack[1]).toEqual({ url: 'http://path/to/file.js', func: 'bar', args: [], line: 1, column: 1, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://path/to/file.js', func: '.plugin/e.fn[c]/<', args: [], line: 1, column: 1, context: null });
         });
 
         it('should parse Chrome error with no location', function () {
@@ -122,9 +123,10 @@
         it('should parse Chrome 36 error with port numbers', function () {
             var stackFrames = TraceKit.computeStackTrace(CapturedExceptions.CHROME_36);
             expect(stackFrames).toBeTruthy();
-            expect(stackFrames.stack.length).toBe(2);
+            expect(stackFrames.stack.length).toBe(3);
             expect(stackFrames.stack[0]).toEqual({ url: 'http://localhost:8080/file.js', func: 'dumpExceptionError', args: [], line: 41, column: 27, context: null });
             expect(stackFrames.stack[1]).toEqual({ url: 'http://localhost:8080/file.js', func: 'HTMLButtonElement.onclick', args: [], line: 107, column: 146, context: null });
+            expect(stackFrames.stack[2]).toEqual({ url: 'http://localhost:8080/file.js', func: 'I.e.fn.(anonymous function) [as index]', args: [], line: 10, column: 3651, context: null });
         });
 
         it('should parse Chrome error with blob URLs', function () {
