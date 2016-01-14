@@ -67,7 +67,7 @@ declare module TraceKit {
      * @param {(number|string)=} depth How many frames deep to trace.
      * @return {Object.<string, *>} Stack trace information.
      */
-    ofCaller:(depth:string|number) => StackTrace;
+    ofCaller:(depth?:string|number) => StackTrace;
 
     /**
      * Retrieves source code from the source code cache.
