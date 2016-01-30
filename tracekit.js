@@ -364,7 +364,8 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             var source = '';
             var domain = '';
             try { domain = document.domain; } catch (e) {}
-            if (url.indexOf(domain) !== -1) {
+            var match = /(.*)\:\/\/([^\/]+)\/{0,1}([\s\S]*)/.exec(url);
+            if (match && match[2] === domain) {
                 source = loadSource(url);
             }
             sourceCache[url] = source ? source.split('\n') : [];
