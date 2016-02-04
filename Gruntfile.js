@@ -3,26 +3,6 @@ module.exports = function (grunt) {
     'use strict';
 
     grunt.initConfig({
-        closureCompiler: {
-            options: {
-                compilerFile: './closure/compiler.jar',
-                checkModified: true,
-                compilerOpts: {
-                    compilation_level: 'ADVANCED_OPTIMIZATIONS',
-                    warning_level: 'verbose',
-                    jscomp_off: ['checkTypes', 'checkVars', 'fileoverviewTags'],
-                    summary_detail_level: 3,
-                    output_wrapper: '"(function(){%output%}).call(this);"'
-                },
-                execOpts: {
-                    maxBuffer: 200 * 1024
-                }
-            },
-            compile: {
-                src: './tracekit.js',
-                dest: './tracekit.min.js'
-            }
-        },
         jshint: {
             options: {
                 jshintrc: '.jshintrc'
@@ -47,8 +27,7 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-closure-tools');
 
     grunt.registerTask('test', ['jasmine']);
-    grunt.registerTask('default', ['jshint:lint', 'closureCompiler:compile']);
+    grunt.registerTask('default', ['jshint:lint']);
 };
