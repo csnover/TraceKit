@@ -1,16 +1,9 @@
-version: 0.3.0.{build}
-
-environment:
-  nodejs_version: "0.10"
+version: 0.3.2.{build}
 
 install:
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node 5
   - npm install -g grunt-cli
   - npm install
-
-before_build:
-  - appveyor DownloadFile "http://dl.google.com/closure-compiler/compiler-latest.zip" -FileName compiler-latest.zip
-  - 7z e compiler-latest.zip closure
 
 build_script:
   - grunt default
