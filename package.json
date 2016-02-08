@@ -21,6 +21,7 @@
     "grunt-cli": "0.1.13",
     "grunt-contrib-jasmine": "1.0.0",
     "grunt-contrib-jshint": "0.12.0",
+    "grunt-jsdoc": "1.1.0",
     "jasmine": "2.4.1",
     "jasmine-core": "2.4.1",
     "karma": "0.13.19",

@@ -22,12 +22,24 @@ module.exports = function (grunt) {
             options: {
                 specs: 'spec/*-spec.js'
             }
+        },
+        jsdoc : {
+            dist : {
+                src: ['tracekit.js'],
+                options: {
+                    destination: 'doc',
+                    readme: 'README.md',
+                    configure: 'jsdoc.conf.json'
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
+    grunt.registerTask('doc', ['jsdoc']);
     grunt.registerTask('test', ['jasmine']);
     grunt.registerTask('default', ['jshint:lint']);
 };
