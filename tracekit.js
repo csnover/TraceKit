@@ -107,7 +107,7 @@ TraceKit.wrap = function traceKitWrapper(func) {
  * If the exception does not reach the top of the browser, you will only
  * get a stack trace from the point where TraceKit.report was called.
  *
- * Handlers receive a stackInfo object as described in the
+ * Handlers receive a TraceKit.StackTrace object as described in the
  * TraceKit.computeStackTrace docs.
  *
  * @memberof TraceKit
@@ -144,7 +144,7 @@ TraceKit.report = (function reportModuleWrapper() {
 
     /**
      * Dispatch stack information to all handlers.
-     * @param {Object.<string, *>} stack
+     * @param {TraceKit.StackTrace} stack
      * @param {boolean} isWindowError Is this a top-level window error?
      * @memberof TraceKit.report
      */
@@ -279,6 +279,28 @@ TraceKit.report = (function reportModuleWrapper() {
 }());
 
 /**
+ * An object representing a single stack frame.
+ * @typedef {Object} StackFrame
+ * @property {string} url The JavaScript or HTML file URL.
+ * @property {string} func The function name, or empty for anonymous functions (if guessing did not work).
+ * @property {?string[]} args The arguments passed to the function, if known.
+ * @property {?number} line The line number, if known.
+ * @property {?number} column The column number, if known.
+ * @property {string[]} context An array of source code lines; the middle element corresponds to the correct line#.
+ * @memberof TraceKit
+ */
+
+/**
+ * An object representing a JavaScript stack trace.
+ * @typedef {Object} StackTrace
+ * @property {string} name The name of the thrown exception.
+ * @property {string} message The exception error message.
+ * @property {TraceKit.StackFrame[]} stack An array of stack frames.
+ * @property {string} mode 'stack', 'stacktrace', 'multiline', 'callers', 'onerror', or 'failed' -- method used to collect the stack trace.
+ * @memberof TraceKit
+ */
+
+/**
  * TraceKit.computeStackTrace: cross-browser stack traces in JavaScript
  *
  * Syntax:
@@ -286,16 +308,6 @@ TraceKit.report = (function reportModuleWrapper() {
  *   s = TraceKit.computeStackTrace.ofCaller([depth])
  *   s = TraceKit.computeStackTrace(exception) // consider using TraceKit.report instead (see below)
  *   ```
- * Returns:
- *   s.name              - exception name
- *   s.message           - exception message
- *   s.stack[i].url      - JavaScript or HTML file URL
- *   s.stack[i].func     - function name, or empty for anonymous functions (if guessing did not work)
- *   s.stack[i].args     - arguments passed to the function, if known
- *   s.stack[i].line     - line number, if known
- *   s.stack[i].column   - column number, if known
- *   s.stack[i].context  - an array of source code lines; the middle element corresponds to the correct line#
- *   s.mode              - 'stack', 'stacktrace', 'multiline', 'callers', 'onerror', or 'failed' -- method used to collect the stack trace
  *
  * Supports:
  *   - Firefox:  full stack trace with line numbers and unreliable column
@@ -676,7 +688,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * Computes stack trace information from the stack property.
      * Chrome and Gecko use this property.
      * @param {Error} ex
-     * @return {?Object.<string, *>} Stack trace information.
+     * @return {?TraceKit.StackTrace} Stack trace information.
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTraceFromStackProp(ex) {
@@ -759,7 +771,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * Computes stack trace information from the stacktrace property.
      * Opera 10+ uses this property.
      * @param {Error} ex
-     * @return {?Object.<string, *>} Stack trace information.
+     * @return {?TraceKit.StackTrace} Stack trace information.
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTraceFromStacktraceProp(ex) {
@@ -834,7 +846,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * Opera 9 and earlier use this method if the option to show stack
      * traces is turned on in opera:config.
      * @param {Error} ex
-     * @return {?Object.<string, *>} Stack information.
+     * @return {?TraceKit.StackTrace} Stack information.
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTraceFromOperaMultiLineMessage(ex) {
@@ -945,7 +957,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     /**
      * Adds information about the first frame to incomplete stack traces.
      * Safari and IE require this to get complete data on the first frame.
-     * @param {Object.<string, *>} stackInfo Stack trace information from
+     * @param {TraceKit.StackTrace} stackInfo Stack trace information from
      * one of the compute* methods.
      * @param {string} url The URL of the script that caused an error.
      * @param {(number|string)} lineNo The line number of the script that
@@ -1007,7 +1019,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * Safari and IE. The top frame is restored by
      * {@link augmentStackTraceWithInitialElement}.
      * @param {Error} ex
-     * @return {?Object.<string, *>} Stack trace information.
+     * @return {?TraceKit.StackTrace} Stack trace information.
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTraceByWalkingCallerChain(ex, depth) {
@@ -1149,7 +1161,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     /**
      * Logs a stacktrace starting from the previous call and working down.
      * @param {(number|string)=} depth How many frames deep to trace.
-     * @return {Object.<string, *>} Stack trace information.
+     * @return {TraceKit.StackTrace} Stack trace information.
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTraceOfCaller(depth) {
