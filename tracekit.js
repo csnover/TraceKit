@@ -145,6 +145,7 @@ TraceKit.report = (function reportModuleWrapper() {
     /**
      * Dispatch stack information to all handlers.
      * @param {Object.<string, *>} stack
+     * @param {boolean} isWindowError Is this a top-level window error?
      * @memberof TraceKit.report
      */
     function notifyHandlers(stack, isWindowError) {
