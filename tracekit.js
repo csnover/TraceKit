@@ -21,7 +21,7 @@ var UNKNOWN_FUNCTION = '?';
  *
  * @param {Object} object to check property
  * @param {string} key to check
- * @return {bool} true if the object has the key and it is not inherited
+ * @return {Boolean} true if the object has the key and it is not inherited
  */
 function _has(object, key) {
     return Object.prototype.hasOwnProperty.call(object, key);
@@ -32,7 +32,7 @@ function _has(object, key) {
  * Example: `_isUndefined(val) === true/false`
  *
  * @param {*} what Value to check
- * @return {bool} true if undefined and false otherwise
+ * @return {Boolean} true if undefined and false otherwise
  */
 function _isUndefined(what) {
     return typeof what === 'undefined';
@@ -147,6 +147,7 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {TraceKit.StackTrace} stack
      * @param {boolean} isWindowError Is this a top-level window error?
      * @memberof TraceKit.report
+     * @throws An exception if an error occurs while calling an handler.
      */
     function notifyHandlers(stack, isWindowError) {
         var exception = null;
@@ -175,11 +176,9 @@ TraceKit.report = (function reportModuleWrapper() {
      * Supported by Gecko and IE.
      * @param {string} message Error message.
      * @param {string} url URL of script that generated the exception.
-     * @param {(number|string)} lineNo The line number at which the error
-     * occurred.
-     * @param {?(number|string)} columnNo The column number at which the error
-     * occurred.
-     * @param {?Error} errorObj The actual Error object.
+     * @param {(number|string)} lineNo The line number at which the error occurred.
+     * @param {(number|string)=} columnNo The column number at which the error occurred.
+     * @param {Error=} errorObj The actual Error object.
      * @memberof TraceKit.report
      */
     function traceKitWindowOnError(message, url, lineNo, columnNo, errorObj) {
@@ -245,6 +244,7 @@ TraceKit.report = (function reportModuleWrapper() {
      * Reports an unhandled Error to TraceKit.
      * @param {Error} ex
      * @memberof TraceKit.report
+     * @throws An exception if an incomplete stack trace is detected (old IE browsers).
      */
     function report(ex) {
         if (lastExceptionStack) {
@@ -283,9 +283,9 @@ TraceKit.report = (function reportModuleWrapper() {
  * @typedef {Object} StackFrame
  * @property {string} url The JavaScript or HTML file URL.
  * @property {string} func The function name, or empty for anonymous functions (if guessing did not work).
- * @property {?string[]} args The arguments passed to the function, if known.
- * @property {?number} line The line number, if known.
- * @property {?number} column The column number, if known.
+ * @property {string[]=} args The arguments passed to the function, if known.
+ * @property {number=} line The line number, if known.
+ * @property {number=} column The column number, if known.
  * @property {string[]} context An array of source code lines; the middle element corresponds to the correct line#.
  * @memberof TraceKit
  */
@@ -1019,7 +1019,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * Safari and IE. The top frame is restored by
      * {@link augmentStackTraceWithInitialElement}.
      * @param {Error} ex
-     * @return {?TraceKit.StackTrace} Stack trace information.
+     * @return {TraceKit.StackTrace=} Stack trace information.
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTraceByWalkingCallerChain(ex, depth) {
