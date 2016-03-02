@@ -82,19 +82,19 @@ declare module TraceKit {
      * Reports an unhandled Error to TraceKit.
      * @param {Error} ex
      */
-    (ex:Error);
+    (ex:Error): void;
 
     /**
      * Add a crash handler.
      * @param {Function} handler
      */
-    subscribe(handler:(stackTrace:TraceKit.StackTrace, options?:any) => void);
+    subscribe(handler:(stackTrace:TraceKit.StackTrace, options?:any) => void): void;
 
     /**
      * Remove a crash handler.
      * @param {Function} handler
      */
-    unsubscribe(handler:() => void);
+    unsubscribe(handler:() => void): void;
   }
 
   /**
