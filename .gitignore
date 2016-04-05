@@ -5,3 +5,5 @@ TraceKit.iml
 /closure
 /tracekit.min.js
 doc
+
+*.log
