@@ -1,7 +1,7 @@
 {
   "name": "tracekit",
   "main": "./tracekit.js",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "homepage": "https://github.com/csnover/TraceKit",
   "description": "Cross browser stack traces",
   "repository": {
@@ -18,15 +18,15 @@
   "license": "MIT",
   "devDependencies": {
     "grunt": "0.4.5",
-    "grunt-cli": "0.1.13",
+    "grunt-cli": "1.2.0",
     "grunt-contrib-jasmine": "1.0.0",
-    "grunt-contrib-jshint": "0.12.0",
+    "grunt-contrib-jshint": "1.0.0",
     "grunt-jsdoc": "1.1.0",
     "jasmine": "2.4.1",
     "jasmine-core": "2.4.1",
-    "karma": "0.13.19",
-    "karma-chrome-launcher": "0.2.2",
-    "karma-jasmine": "0.3.7"
+    "karma": "0.13.22",
+    "karma-chrome-launcher": "0.2.3",
+    "karma-jasmine": "0.3.8"
   },
   "scripts": {
     "test": "grunt test"

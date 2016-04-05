@@ -283,7 +283,7 @@ TraceKit.report = (function reportModuleWrapper() {
  * @typedef {Object} StackFrame
  * @property {string} url The JavaScript or HTML file URL.
  * @property {string} func The function name, or empty for anonymous functions (if guessing did not work).
- * @property {string[]=} args The arguments passed to the function, if known.
+ * @property {string[]?} args The arguments passed to the function, if known.
  * @property {number=} line The line number, if known.
  * @property {number=} column The column number, if known.
  * @property {string[]} context An array of source code lines; the middle element corresponds to the correct line#.
