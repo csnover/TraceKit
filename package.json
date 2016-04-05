@@ -30,5 +30,6 @@
   },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "typings": "tracekit.d.ts"
 }
