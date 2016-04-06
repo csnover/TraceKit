@@ -232,3 +232,5 @@ declare module TraceKit {
   var collectWindowErrors:boolean;
   var linesOfContext:boolean;
 }
+
+export = TraceKit
