@@ -1230,3 +1230,5 @@ if (!TraceKit.linesOfContext || TraceKit.linesOfContext < 1) {
 window.TraceKit = TraceKit;
 
 }(typeof window !== 'undefined' ? window : global));
+
+module.exports = TraceKit;
