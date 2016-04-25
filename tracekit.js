@@ -411,10 +411,18 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         if (!_has(sourceCache, url)) {
             // URL needs to be able to fetched within the acceptable domain.  Otherwise,
             // cross-domain errors will be triggered.
+            /*
+                Regex matches:
+                0 - Full Url
+                1 - Protocol
+                2 - Domain 
+                3 - Port (Useful for internal applications)
+                4 - Path 
+            */
             var source = '';
             var domain = '';
-            try { domain = document.domain; } catch (e) {}
-            var match = /(.*)\:\/\/([^\/]+)\/{0,1}([\s\S]*)/.exec(url);
+            try { domain = document.domain; } catch (e) { }
+            var match = /(.*)\:\/\/([^:\/]+)([:\d]*)\/{0,1}([\s\S]*)/.exec(url);
             if (match && match[2] === domain) {
                 source = loadSource(url);
             }
