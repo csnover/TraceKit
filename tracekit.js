@@ -1243,3 +1243,5 @@ if (typeof module != 'undefined' && module.exports && this.module !== module) {
 }
 
 }(typeof window !== 'undefined' ? window : global));
+
+module.exports = TraceKit;

@@ -94,7 +94,7 @@ declare module TraceKit {
      * Remove a crash handler.
      * @param {Function} handler
      */
-    unsubscribe(handler:() => void): void;
+    unsubscribe(handler:(stackTrace:TraceKit.StackTrace, options?:any) => void): void;
   }
 
   /**
