@@ -415,9 +415,9 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                 Regex matches:
                 0 - Full Url
                 1 - Protocol
-                2 - Domain 
+                2 - Domain
                 3 - Port (Useful for internal applications)
-                4 - Path 
+                4 - Path
             */
             var source = '';
             var domain = '';
@@ -1222,22 +1222,21 @@ TraceKit.extendToAsynchronousCallbacks = function () {
 
 //Default options:
 if (!TraceKit.remoteFetching) {
-  TraceKit.remoteFetching = true;
+    TraceKit.remoteFetching = true;
 }
 if (!TraceKit.collectWindowErrors) {
-  TraceKit.collectWindowErrors = true;
+    TraceKit.collectWindowErrors = true;
 }
 if (!TraceKit.linesOfContext || TraceKit.linesOfContext < 1) {
-  // 5 lines before, the offending line, 5 lines after
-  TraceKit.linesOfContext = 11;
+    // 5 lines before, the offending line, 5 lines after
+    TraceKit.linesOfContext = 11;
 }
 
-
 // UMD export
-if (typeof module != 'undefined' && module.exports && this.module !== module) {
+if (typeof module !== 'undefined' && module.exports && this.module !== module) {
     module.exports = TraceKit;
 } else if (typeof define === 'function' && define.amd) {
-    define(TraceKit);
+    define('TraceKit', [], TraceKit);
 } else {
     window.TraceKit = TraceKit;
 }

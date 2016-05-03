@@ -29,6 +29,8 @@
     "maxerr": 20,
     "globals": {
         "ActiveXObject": false,
-        "global": false
+        "define": false,
+        "global": false,
+        "module": false
     }
 }
