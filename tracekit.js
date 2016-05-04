@@ -421,7 +421,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             */
             var source = '';
             var domain = '';
-            try { domain = document.domain; } catch (e) { }
+            try { domain = window.document.domain; } catch (e) { }
             var match = /(.*)\:\/\/([^:\/]+)([:\d]*)\/{0,1}([\s\S]*)/.exec(url);
             if (match && match[2] === domain) {
                 source = loadSource(url);
@@ -592,12 +592,12 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @memberof TraceKit.computeStackTrace
      */
     function findSourceByFunctionBody(func) {
-        if (_isUndefined(document)) {
+        if (_isUndefined(window && window.document)) {
             return;
         }
 
         var urls = [window.location.href],
-            scripts = document.getElementsByTagName('script'),
+            scripts = window.document.getElementsByTagName('script'),
             body,
             code = '' + func,
             codeRE = /^function(?:\s+([\w$]+))?\s*\(([\w\s,]*)\)\s*\{\s*(\S[\s\S]*\S)\s*\}\s*$/,
@@ -882,7 +882,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             lineRE2 = /^\s*Line (\d+) of inline#(\d+) script in ((?:file|https?|blob)\S+)(?:: in function (\S+))?\s*$/i,
             lineRE3 = /^\s*Line (\d+) of function script\s*$/i,
             stack = [],
-            scripts = document.getElementsByTagName('script'),
+            scripts = (window && window.document && window.document.getElementsByTagName('script')),
             inlineScriptBlocks = [],
             parts;
 
