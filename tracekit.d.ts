@@ -25,7 +25,7 @@ interface ComputeStackTrace {
      * @param {Error} ex
      * @param {(string|number)=} depth
      */
-    (ex:Error, depth:string|number): StackTrace;
+    (ex:Error, depth?:string|number): StackTrace;
 
     /**
      * Adds information about the first frame to incomplete stack traces.
@@ -40,7 +40,7 @@ interface ComputeStackTrace {
      * @return {boolean} Whether or not the stack information was
      * augmented.
      */
-    augmentStackTraceWithInitialElement:(stackInfo:string, url:string, lineNo:string|number, message:string) => boolean;
+    augmentStackTraceWithInitialElement:(stackInfo:string, url:string, lineNo:string|number, message?:string) => boolean;
 
     /**
      * Tries to use an externally loaded copy of source code to determine
