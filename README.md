@@ -60,7 +60,7 @@ We recommend the above convention of function naming, `Api_foo` always correspon
 
 ## Options
 
-TraceKit will attempt to fetch an analyze source files, but you can turn this off using:
+TraceKit will attempt to fetch and analyze source files, but you can turn this off using:
 
 ```javascript
 TraceKit.remoteFetching = false;
