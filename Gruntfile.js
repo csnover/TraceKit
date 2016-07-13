@@ -75,4 +75,12 @@ module.exports = function (grunt) {
     grunt.registerTask('doc', ['jsdoc']);
     grunt.registerTask('test', ['jasmine']);
     grunt.registerTask('default', ['jshint:lint']);
+    grunt.registerTask('release', 'Release task', function(release) {
+        grunt.task.run('uglify');
+        if (arguments.length === 0) {
+            grunt.task.run('bump');
+        } else {
+            grunt.task.run('bump:'+ release);
+        }
+    });
 };
