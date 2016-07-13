@@ -24,7 +24,7 @@ module.exports = function (grunt) {
             }
         },
         jsdoc : {
-            dist : {
+            dist: {
                 src: ['tracekit.js'],
                 options: {
                     destination: 'doc',
