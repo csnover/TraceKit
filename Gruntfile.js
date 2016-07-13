@@ -32,11 +32,23 @@ module.exports = function (grunt) {
                     configure: 'jsdoc.conf.json'
                 }
             }
+        },
+        uglify: {
+            options: {
+                sourceMap: true,
+                sourceMapName: 'tracekit.min.js.map'
+            },
+            dist: {
+                files: {
+                    'tracekit.min.js': ['tracekit.js']
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-jsdoc');
 
     grunt.registerTask('doc', ['jsdoc']);
