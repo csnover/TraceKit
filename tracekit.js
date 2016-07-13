@@ -1233,7 +1233,7 @@ if (!TraceKit.linesOfContext || TraceKit.linesOfContext < 1) {
 }
 
 // UMD export
-if (typeof module !== 'undefined' && module.exports && this.module !== module) {
+if (typeof module !== 'undefined' && module.exports && window.module !== module) {
     module.exports = TraceKit;
 } else if (typeof define === 'function' && define.amd) {
     define('TraceKit', [], TraceKit);
