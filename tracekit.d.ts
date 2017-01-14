@@ -76,6 +76,10 @@ interface ComputeStackTrace {
     getSource:(url:string) => string[];
 }
 
+interface ReportSubscriber {
+    (stackTrace: StackTrace, isWindowError: boolean, error: any): void
+}
+
 interface Report {
     /**
      * Reports an unhandled Error to TraceKit.
@@ -87,13 +91,13 @@ interface Report {
      * Add a crash handler.
      * @param {Function} handler
      */
-    subscribe(handler:(stackTrace:StackTrace, options?:any) => void): void;
+    subscribe(handler: ReportSubscriber): void;
 
     /**
      * Remove a crash handler.
      * @param {Function} handler
      */
-    unsubscribe(handler:() => void): void;
+    unsubscribe(handler: ReportSubscriber): void;
 }
 
 /**
