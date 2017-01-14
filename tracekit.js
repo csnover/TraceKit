@@ -115,7 +115,6 @@ TraceKit.wrap = function traceKitWrapper(func) {
  */
 TraceKit.report = (function reportModuleWrapper() {
     var handlers = [],
-        lastArgs = null,
         lastException = null,
         lastExceptionStack = null;
 
@@ -157,7 +156,7 @@ TraceKit.report = (function reportModuleWrapper() {
         for (var i in handlers) {
             if (_has(handlers, i)) {
                 try {
-                    handlers[i].apply(null, [stack].concat(_slice.call(arguments, 2)));
+                    handlers[i](stack, isWindowError);
                 } catch (inner) {
                     exception = inner;
                 }
@@ -232,12 +231,10 @@ TraceKit.report = (function reportModuleWrapper() {
      * @memberof TraceKit.report
      */
     function processLastException() {
-        var _lastExceptionStack = lastExceptionStack,
-            _lastArgs = lastArgs;
-        lastArgs = null;
+        var _lastExceptionStack = lastExceptionStack;
         lastExceptionStack = null;
         lastException = null;
-        notifyHandlers.apply(null, [_lastExceptionStack, false].concat(_lastArgs));
+        notifyHandlers(_lastExceptionStack, false);
     }
 
     /**
@@ -258,7 +255,6 @@ TraceKit.report = (function reportModuleWrapper() {
         var stack = TraceKit.computeStackTrace(ex);
         lastExceptionStack = stack;
         lastException = ex;
-        lastArgs = _slice.call(arguments, 1);
 
         // If the stack trace is incomplete, wait for 2 seconds for
         // slow slow IE to see if onerror occurs or not before reporting
