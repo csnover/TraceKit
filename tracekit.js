@@ -115,7 +115,6 @@ TraceKit.wrap = function traceKitWrapper(func) {
  */
 TraceKit.report = (function reportModuleWrapper() {
     var handlers = [],
-        lastArgs = null,
         lastException = null,
         lastExceptionStack = null;
 
@@ -146,10 +145,11 @@ TraceKit.report = (function reportModuleWrapper() {
      * Dispatch stack information to all handlers.
      * @param {TraceKit.StackTrace} stack
      * @param {boolean} isWindowError Is this a top-level window error?
+     * @param {Error=} error The error that's being handled (if available, null otherwise)
      * @memberof TraceKit.report
      * @throws An exception if an error occurs while calling an handler.
      */
-    function notifyHandlers(stack, isWindowError) {
+    function notifyHandlers(stack, isWindowError, error) {
         var exception = null;
         if (isWindowError && !TraceKit.collectWindowErrors) {
           return;
@@ -157,7 +157,7 @@ TraceKit.report = (function reportModuleWrapper() {
         for (var i in handlers) {
             if (_has(handlers, i)) {
                 try {
-                    handlers[i].apply(null, [stack].concat(_slice.call(arguments, 2)));
+                    handlers[i](stack, isWindowError, error);
                 } catch (inner) {
                     exception = inner;
                 }
@@ -189,7 +189,7 @@ TraceKit.report = (function reportModuleWrapper() {
     	    processLastException();
 	    } else if (errorObj) {
             stack = TraceKit.computeStackTrace(errorObj);
-            notifyHandlers(stack, true);
+            notifyHandlers(stack, true, errorObj);
         } else {
             var location = {
               'url': url,
@@ -204,7 +204,7 @@ TraceKit.report = (function reportModuleWrapper() {
               'stack': [location]
             };
 
-            notifyHandlers(stack, true);
+            notifyHandlers(stack, true, null);
         }
 
         if (_oldOnerrorHandler) {
@@ -233,11 +233,10 @@ TraceKit.report = (function reportModuleWrapper() {
      */
     function processLastException() {
         var _lastExceptionStack = lastExceptionStack,
-            _lastArgs = lastArgs;
-        lastArgs = null;
+            _lastException = lastException;
         lastExceptionStack = null;
         lastException = null;
-        notifyHandlers.apply(null, [_lastExceptionStack, false].concat(_lastArgs));
+        notifyHandlers(_lastExceptionStack, false, _lastException);
     }
 
     /**
@@ -258,7 +257,6 @@ TraceKit.report = (function reportModuleWrapper() {
         var stack = TraceKit.computeStackTrace(ex);
         lastExceptionStack = stack;
         lastException = ex;
-        lastArgs = _slice.call(arguments, 1);
 
         // If the stack trace is incomplete, wait for 2 seconds for
         // slow slow IE to see if onerror occurs or not before reporting

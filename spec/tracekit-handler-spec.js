@@ -22,6 +22,33 @@
             }, 1000);
         }, 2000);
 
+        it('should get extra arguments (isWindowError and exception)', function (done){
+            var handler = jasmine.createSpy('handler');
+
+            var exception = new Error('Boom!');
+
+            function throwException() {
+                throw exception;
+            }
+
+            TraceKit.report.subscribe(handler);
+            expect(function () { TraceKit.wrap(throwException)(); }).toThrow();
+
+            setTimeout(function () {
+                TraceKit.report.unsubscribe(handler);
+
+                expect(handler.calls.count()).toEqual(1);
+
+                var isWindowError = handler.calls.mostRecent().args[1];
+                expect(isWindowError).toEqual(false);
+
+                var e = handler.calls.mostRecent().args[2];
+                expect(e).toEqual(exception);
+
+                done();
+            }, 1000);
+        }, 2000);
+
         // NOTE: This will not pass currently because errors are rethrown.
         /* it('it should call report handler once', function (done){
             var handlerCalledCount = 0;
