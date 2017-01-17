@@ -118,14 +118,22 @@ TraceKit.report = (function reportModuleWrapper() {
         lastException = null,
         lastExceptionStack = null;
 
+    function isWindowAccessible(win) {
+      try {
+        return (win.location.host);
+      } catch (e) {}
+    }
     /**
      * Add a crash handler.
      * @param {Function} handler
      * @memberof TraceKit.report
      */
-    function subscribe(handler) {
-        installGlobalHandler();
-        handlers.push(handler);
+    function subscribe(handler, aWindow) {
+      aWindow = (aWindow || window);
+      if (isWindowAccessible(aWindow)) {
+        TraceKit.windowPointer = aWindow;
+        installGlobalHandler(handler, aWindow);
+      }
     }
 
     /**
@@ -133,12 +141,15 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {Function} handler
      * @memberof TraceKit.report
      */
-    function unsubscribe(handler) {
+    function unsubscribe(handler, aWindow) {
+      aWindow = (aWindow || window);
+      if (isWindowAccessible(aWindow)) {
         for (var i = handlers.length - 1; i >= 0; --i) {
-            if (handlers[i] === handler) {
+          if (handlers[i][0] === handler && aWindow === handlers[i][1]) {
                 handlers.splice(i, 1);
             }
         }
+      }
     }
 
     /**
@@ -149,27 +160,29 @@ TraceKit.report = (function reportModuleWrapper() {
      * @memberof TraceKit.report
      * @throws An exception if an error occurs while calling an handler.
      */
-    function notifyHandlers(stack, isWindowError, error) {
+    function notifyHandlers(stack, isWindowError, aArguments) {
         var exception = null;
         if (isWindowError && !TraceKit.collectWindowErrors) {
           return;
         }
         for (var i in handlers) {
-            if (_has(handlers, i)) {
+        if (_has(handlers, i) && handlers[i][1] === TraceKit.windowPointer) {
                 try {
-                    handlers[i](stack, isWindowError, error);
+            handlers[i][0](stack, isWindowError, (aArguments.length > 4) ? aArguments[4] : null);
                 } catch (inner) {
                     exception = inner;
                 }
+          if (handlers[i][1]._oldOnerrorHandler) {
+            return handlers[i][1]._oldOnerrorHandler.apply(handlers[i][1], aArguments);
             }
         }
+      }
 
         if (exception) {
             throw exception;
         }
     }
 
-    var _oldOnerrorHandler, _onErrorHandlerInstalled;
 
     /**
      * Ensures all global unhandled exceptions are recorded.
@@ -183,13 +196,13 @@ TraceKit.report = (function reportModuleWrapper() {
      */
     function traceKitWindowOnError(message, url, lineNo, columnNo, errorObj) {
         var stack = null;
-
+      TraceKit.windowPointer = this;
         if (lastExceptionStack) {
             TraceKit.computeStackTrace.augmentStackTraceWithInitialElement(lastExceptionStack, url, lineNo, message);
-    	    processLastException();
+        processLastException(arguments);
 	    } else if (errorObj) {
             stack = TraceKit.computeStackTrace(errorObj);
-            notifyHandlers(stack, true, errorObj);
+        notifyHandlers(stack, true, arguments);
         } else {
             var location = {
               'url': url,
@@ -204,12 +217,10 @@ TraceKit.report = (function reportModuleWrapper() {
               'stack': [location]
             };
 
-            notifyHandlers(stack, true, null);
+        notifyHandlers(stack, true, arguments);
         }
 
-        if (_oldOnerrorHandler) {
-            return _oldOnerrorHandler.apply(this, arguments);
-        }
+
 
         return false;
     }
@@ -218,13 +229,14 @@ TraceKit.report = (function reportModuleWrapper() {
      * Install a global onerror handler
      * @memberof TraceKit.report
      */
-    function installGlobalHandler () {
-        if (_onErrorHandlerInstalled === true) {
+    function installGlobalHandler(aHandlers, aWindow) {
+      if (aWindow._onErrorHandlerInstalled === true) {
             return;
         }
-        _oldOnerrorHandler = window.onerror;
-        window.onerror = traceKitWindowOnError;
-        _onErrorHandlerInstalled = true;
+      var _oldOnerrorHandler = aWindow.onerror;
+      aWindow.onerror = traceKitWindowOnError;
+      aWindow._onErrorHandlerInstalled = true;
+      handlers.push([aHandlers, aWindow, _oldOnerrorHandler]);
     }
 
     /**
@@ -419,7 +431,9 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             */
             var source = '';
             var domain = '';
-            try { domain = window.document.domain; } catch (e) { }
+        try {
+          domain = window.document.domain;
+        } catch (e) {}
             var match = /(.*)\:\/\/([^:\/]+)([:\d]*)\/{0,1}([\s\S]*)/.exec(url);
             if (match && match[2] === domain) {
                 source = loadSource(url);
@@ -590,12 +604,12 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @memberof TraceKit.computeStackTrace
      */
     function findSourceByFunctionBody(func) {
-        if (_isUndefined(window && window.document)) {
+      if (_isUndefined(TraceKit.windowPointer && window.document)) {
             return;
         }
 
-        var urls = [window.location.href],
-            scripts = window.document.getElementsByTagName('script'),
+      var urls = [TraceKit.windowPointer.location.href],
+        scripts = TraceKit.windowPointer.document.getElementsByTagName('script'),
             body,
             code = '' + func,
             codeRE = /^function(?:\s+([\w$]+))?\s*\(([\w\s,]*)\)\s*\{\s*(\S[\s\S]*\S)\s*\}\s*$/,
@@ -880,7 +894,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             lineRE2 = /^\s*Line (\d+) of inline#(\d+) script in ((?:file|https?|blob)\S+)(?:: in function (\S+))?\s*$/i,
             lineRE3 = /^\s*Line (\d+) of function script\s*$/i,
             stack = [],
-            scripts = (window && window.document && window.document.getElementsByTagName('script')),
+        scripts = (TraceKit.windowPointer && TraceKit.windowPointer.document && TraceKit.windowPointer.document.getElementsByTagName('script')),
             inlineScriptBlocks = [],
             parts;
 
@@ -921,7 +935,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                     }
                 }
             } else if ((parts = lineRE3.exec(lines[line]))) {
-                var url = window.location.href.replace(/#.*$/, '');
+          var url = TraceKit.windowPointer.location.href.replace(/#.*$/, '');
                 var re = new RegExp(escapeCodeAsRegExpForMatchingInsideHTML(lines[line + 1]));
                 var src = findSourceInUrls(re, [url]);
                 item = {
@@ -1195,8 +1209,8 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
  */
 TraceKit.extendToAsynchronousCallbacks = function () {
     var _helper = function _helper(fnName) {
-        var originalFn = window[fnName];
-        window[fnName] = function traceKitAsyncExtension() {
+      var originalFn = TraceKit.windowPointer[fnName];
+      TraceKit.windowPointer[fnName] = function traceKitAsyncExtension() {
             // Make a copy of the arguments
             var args = _slice.call(arguments);
             var originalCallback = args[0];
