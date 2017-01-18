@@ -118,10 +118,17 @@ TraceKit.report = (function reportModuleWrapper() {
         lastException = null,
         lastExceptionStack = null;
 
+  
+    /**     
+    * Can the window be used     
+    * @param {type} win      
+    * @returns {boolean}  
+    * @memberof TraceKit.report
+    */
     function isWindowAccessible(win) {
       try {
         return (win.location.host);
-      } catch (e) {}
+      } catch (e) { return false; }
     }
     /**
      * Add a crash handler.
