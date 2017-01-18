@@ -128,11 +128,11 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {Function} handler
      * @memberof TraceKit.report
      */
-    function subscribe(handler, aWindow) {
-      aWindow = (aWindow || window);
-      if (isWindowAccessible(aWindow)) {
-        TraceKit.windowPointer = aWindow;
-        installGlobalHandler(handler, aWindow);
+    function subscribe(handler, win) {
+      win = (win || window);
+      if (isWindowAccessible(win)) {
+        TraceKit.windowPointer = win;
+        installGlobalHandler(handler, win);
       }
     }
 
@@ -141,11 +141,11 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {Function} handler
      * @memberof TraceKit.report
      */
-    function unsubscribe(handler, aWindow) {
-      aWindow = (aWindow || window);
-      if (isWindowAccessible(aWindow)) {
+    function unsubscribe(handler, win) {
+      win = (win || window);
+      if (isWindowAccessible(win)) {
         for (var i = handlers.length - 1; i >= 0; --i) {
-          if (handlers[i][0] === handler && aWindow === handlers[i][1]) {
+          if (handlers[i][0] === handler && win === handlers[i][1]) {
                 handlers.splice(i, 1);
             }
         }
