@@ -168,12 +168,14 @@ TraceKit.report = (function reportModuleWrapper() {
         for (var i in handlers) {
         if (_has(handlers, i) && handlers[i][1] === TraceKit.windowPointer) {
                 try {
-            handlers[i][0](stack, isWindowError, (aArguments.length > 4) ? aArguments[4] : null);
+                  var errorObj=(aArguments.length > 4) ? aArguments[4] : null;
+                  handlers[i][0](stack, isWindowError, errorObj);
                 } catch (inner) {
                     exception = inner;
                 }
-          if (handlers[i][1]._oldOnerrorHandler) {
-            return handlers[i][1]._oldOnerrorHandler.apply(handlers[i][1], aArguments);
+          // Call old onerror events
+          if (handlers[i][2]) {
+            return handlers[i][2].apply(handlers[i][1], aArguments);
             }
         }
       }
@@ -373,9 +375,10 @@ TraceKit.report = (function reportModuleWrapper() {
  * @memberof TraceKit
  * @namespace
  */
-TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
+TraceKit.computeStackTrace = (function() {
     var debug = false,
-        sourceCache = {};
+        sourceCache = {},
+        curWin = TraceKit.windowPointer;
 
     /**
      * Attempts to retrieve source code via XMLHttpRequest, which is used
@@ -432,7 +435,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             var source = '';
             var domain = '';
         try {
-          domain = window.document.domain;
+          domain = curWin.document.domain;
         } catch (e) {}
             var match = /(.*)\:\/\/([^:\/]+)([:\d]*)\/{0,1}([\s\S]*)/.exec(url);
             if (match && match[2] === domain) {
@@ -604,12 +607,12 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @memberof TraceKit.computeStackTrace
      */
     function findSourceByFunctionBody(func) {
-      if (_isUndefined(TraceKit.windowPointer && window.document)) {
+      if (_isUndefined(curWin && curWin.document)) {
             return;
         }
 
-      var urls = [TraceKit.windowPointer.location.href],
-        scripts = TraceKit.windowPointer.document.getElementsByTagName('script'),
+      var urls = [curWin.location.href],
+        scripts = curWin.document.getElementsByTagName('script'),
             body,
             code = '' + func,
             codeRE = /^function(?:\s+([\w$]+))?\s*\(([\w\s,]*)\)\s*\{\s*(\S[\s\S]*\S)\s*\}\s*$/,
@@ -894,7 +897,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             lineRE2 = /^\s*Line (\d+) of inline#(\d+) script in ((?:file|https?|blob)\S+)(?:: in function (\S+))?\s*$/i,
             lineRE3 = /^\s*Line (\d+) of function script\s*$/i,
             stack = [],
-        scripts = (TraceKit.windowPointer && TraceKit.windowPointer.document && TraceKit.windowPointer.document.getElementsByTagName('script')),
+        scripts = (curWin && curWin.document && curWin.document.getElementsByTagName('script')),
             inlineScriptBlocks = [],
             parts;
 
@@ -935,7 +938,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                     }
                 }
             } else if ((parts = lineRE3.exec(lines[line]))) {
-          var url = TraceKit.windowPointer.location.href.replace(/#.*$/, '');
+          var url = curWin.location.href.replace(/#.*$/, '');
                 var re = new RegExp(escapeCodeAsRegExpForMatchingInsideHTML(lines[line + 1]));
                 var src = findSourceInUrls(re, [url]);
                 item = {
@@ -1123,6 +1126,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTrace(ex, depth) {
+        curWin = TraceKit.windowPointer;
         var stack = null;
         depth = (depth == null ? 0 : +depth);
 
