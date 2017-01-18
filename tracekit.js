@@ -126,6 +126,7 @@ TraceKit.report = (function reportModuleWrapper() {
     /**
      * Add a crash handler.
      * @param {Function} handler
+     * @param {window} win default is current window. Need if you want to subcribe tracekit to another window/frame
      * @memberof TraceKit.report
      */
     function subscribe(handler, win) {
@@ -139,6 +140,7 @@ TraceKit.report = (function reportModuleWrapper() {
     /**
      * Remove a crash handler.
      * @param {Function} handler
+     * @param {window} win default is current window. Need if you want to unsubcribe tracekit to another window/frame
      * @memberof TraceKit.report
      */
     function unsubscribe(handler, win) {
@@ -146,6 +148,9 @@ TraceKit.report = (function reportModuleWrapper() {
       if (isWindowAccessible(win)) {
         for (var i = handlers.length - 1; i >= 0; --i) {
           if (handlers[i][0] === handler && win === handlers[i][1]) {
+                // put back the old event handler
+                win.onerror = handlers[i][2];
+                // remove handler from handlers
                 handlers.splice(i, 1);
             }
         }
@@ -156,11 +161,11 @@ TraceKit.report = (function reportModuleWrapper() {
      * Dispatch stack information to all handlers.
      * @param {TraceKit.StackTrace} stack
      * @param {boolean} isWindowError Is this a top-level window error?
-     * @param {Error=} error The error that's being handled (if available, null otherwise)
+     * @param {array} args all the arguments from onerror event. Array of [Message, url, lineNo, columnNo, errorObj]
      * @memberof TraceKit.report
      * @throws An exception if an error occurs while calling an handler.
      */
-    function notifyHandlers(stack, isWindowError, aArguments) {
+    function notifyHandlers(stack, isWindowError, args) {
         var exception = null;
         if (isWindowError && !TraceKit.collectWindowErrors) {
           return;
@@ -168,14 +173,14 @@ TraceKit.report = (function reportModuleWrapper() {
         for (var i in handlers) {
         if (_has(handlers, i) && handlers[i][1] === TraceKit.windowPointer) {
                 try {
-                  var errorObj=(aArguments.length > 4) ? aArguments[4] : null;
+                  var errorObj=(args.length > 4) ? args[4] : null;
                   handlers[i][0](stack, isWindowError, errorObj);
                 } catch (inner) {
                     exception = inner;
                 }
           // Call old onerror events
           if (handlers[i][2]) {
-            return handlers[i][2].apply(handlers[i][1], aArguments);
+            return handlers[i][2].apply(handlers[i][1], args);
             }
         }
       }
@@ -229,16 +234,18 @@ TraceKit.report = (function reportModuleWrapper() {
 
     /**
      * Install a global onerror handler
+     * @param {Function} handler
+     * @param {window} win tracekit will be attached to this window
      * @memberof TraceKit.report
      */
-    function installGlobalHandler(aHandlers, aWindow) {
-      if (aWindow._onErrorHandlerInstalled === true) {
+    function installGlobalHandler(handler, win) {
+      if (win._onErrorHandlerInstalled === true) {
             return;
         }
-      var oldOnerrorHandler = aWindow.onerror;
-      aWindow.onerror = traceKitWindowOnError;
-      aWindow._onErrorHandlerInstalled = true;
-      handlers.push([aHandlers, aWindow, oldOnerrorHandler]);
+      var oldOnerrorHandler = win.onerror;
+      win.onerror = traceKitWindowOnError;
+      win._onErrorHandlerInstalled = true;
+      handlers.push([handlers, win, oldOnerrorHandler]);
     }
 
     /**
