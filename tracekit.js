@@ -233,10 +233,10 @@ TraceKit.report = (function reportModuleWrapper() {
       if (aWindow._onErrorHandlerInstalled === true) {
             return;
         }
-      var _oldOnerrorHandler = aWindow.onerror;
+      var oldOnerrorHandler = aWindow.onerror;
       aWindow.onerror = traceKitWindowOnError;
       aWindow._onErrorHandlerInstalled = true;
-      handlers.push([aHandlers, aWindow, _oldOnerrorHandler]);
+      handlers.push([aHandlers, aWindow, oldOnerrorHandler]);
     }
 
     /**
