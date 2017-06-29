@@ -145,7 +145,7 @@
         it('should pass undefined:undefined', function (done) {
           // this is probably not good behavior;  just writing this test to verify
           // that it doesn't change unintentionally
-          subscriptionHandler = function (stack, isWindowError, error) {a
+          subscriptionHandler = function (stack, isWindowError, error) {
             expect(stack.name).toBe(undefined);
             expect(stack.message).toBe(undefined);
             done();
