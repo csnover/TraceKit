@@ -1121,7 +1121,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             }
         } 
         catch (error) {
-            console.log(error)
+           
         }   
 
         if (depth) {
