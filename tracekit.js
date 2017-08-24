@@ -1071,54 +1071,58 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             parts,
             item,
             source;
-
-        for (var curr = computeStackTraceByWalkingCallerChain.caller; curr && !recursion; curr = curr.caller) {
-            if (curr === computeStackTrace || curr === TraceKit.report) {
-                continue;
-            }
-
-            item = {
-                'url': null,
-                'func': UNKNOWN_FUNCTION,
-                'args': [],
-                'line': null,
-                'column': null
-            };
-
-            if (curr.name) {
-                item.func = curr.name;
-            } else if ((parts = functionName.exec(curr.toString()))) {
-                item.func = parts[1];
-            }
-
-            if (typeof item.func === 'undefined') {
-              try {
-                item.func = parts.input.substring(0, parts.input.indexOf('{'));
-              } catch (e) { }
-            }
-
-            if ((source = findSourceByFunctionBody(curr))) {
-                item.url = source.url;
-                item.line = source.line;
-
-                if (item.func === UNKNOWN_FUNCTION) {
-                    item.func = guessFunctionName(item.url, item.line);
+        try {
+            for (var curr = computeStackTraceByWalkingCallerChain.caller; curr && !recursion; curr = curr.caller) {
+                if (curr === computeStackTrace || curr === TraceKit.report) {
+                    continue;
                 }
 
-                var reference = / '([^']+)' /.exec(ex.message || ex.description);
-                if (reference) {
-                    item.column = findSourceInLine(reference[1], source.url, source.line);
+                item = {
+                    'url': null,
+                    'func': UNKNOWN_FUNCTION,
+                    'args': [],
+                    'line': null,
+                    'column': null
+                };
+
+                if (curr.name) {
+                    item.func = curr.name;
+                } else if ((parts = functionName.exec(curr.toString()))) {
+                    item.func = parts[1];
                 }
-            }
 
-            if (funcs['' + curr]) {
-                recursion = true;
-            }else{
-                funcs['' + curr] = true;
-            }
+                if (typeof item.func === 'undefined') {
+                    try {
+                        item.func = parts.input.substring(0, parts.input.indexOf('{'));
+                    } catch (e) { }
+                }
 
-            stack.push(item);
-        }
+                if ((source = findSourceByFunctionBody(curr))) {
+                    item.url = source.url;
+                    item.line = source.line;
+
+                    if (item.func === UNKNOWN_FUNCTION) {
+                        item.func = guessFunctionName(item.url, item.line);
+                    }
+
+                    var reference = / '([^']+)' /.exec(ex.message || ex.description);
+                    if (reference) {
+                        item.column = findSourceInLine(reference[1], source.url, source.line);
+                    }
+                }
+
+                if (funcs['' + curr]) {
+                    recursion = true;
+                } else {
+                    funcs['' + curr] = true;
+                }
+
+                stack.push(item);
+            }
+        } 
+        catch (error) {
+            console.log(error)
+        }   
 
         if (depth) {
             stack.splice(0, depth);
