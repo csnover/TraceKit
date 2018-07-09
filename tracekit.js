@@ -237,7 +237,7 @@ TraceKit.report = (function reportModuleWrapper() {
     }
 
     /**
-     * Ensures all unhandled rejectionss are recorded.
+     * Ensures all unhandled rejections are recorded.
      * @param {PromiseRejectionEvent} e event.
      * @memberof TraceKit.report
      * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
@@ -267,8 +267,10 @@ TraceKit.report = (function reportModuleWrapper() {
      * @memberof TraceKit.report
      */
     function uninstallGlobalHandler() {
-        window.onerror = _oldOnerrorHandler;
-        _onErrorHandlerInstalled = false;
+        if (_onErrorHandlerInstalled) {
+            window.onerror = _oldOnerrorHandler;
+            _onErrorHandlerInstalled = false;
+        }
     }
 
     /**
@@ -290,8 +292,10 @@ TraceKit.report = (function reportModuleWrapper() {
      * @memberof TraceKit.report
      */
     function uninstallGlobalUnhandledRejectionHandler() {
-        window.onerror = _oldOnunhandledrejectionHandler;
-        _onUnhandledRejectionHandlerInstalled = false;
+        if (_onUnhandledRejectionHandlerInstalled) {
+            window.onerror = _oldOnunhandledrejectionHandler;
+            _onUnhandledRejectionHandlerInstalled = false;
+        }
     }
 
     /**
