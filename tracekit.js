@@ -138,6 +138,7 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {window} win default is current window. Need if you want to subcribe tracekit to another window/frame
      * @memberof TraceKit.report
      */
+
     function subscribe(handler, win) {
       win = (win || window);
       if (isWindowAccessible(win)) {
@@ -199,7 +200,6 @@ TraceKit.report = (function reportModuleWrapper() {
         }
     }
 
-
     /**
      * Ensures all global unhandled exceptions are recorded.
      * Supported by Gecko and IE.
@@ -252,6 +252,18 @@ TraceKit.report = (function reportModuleWrapper() {
     }
 
     /**
+     * Ensures all unhandled rejections are recorded.
+     * @param {PromiseRejectionEvent} e event.
+     * @memberof TraceKit.report
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/PromiseRejectionEvent
+     */
+    function traceKitWindowOnUnhandledRejection(e) {
+        var stack = TraceKit.computeStackTrace(e.reason);
+        notifyHandlers(stack, true, e.reason);
+    }
+
+    /**
      * Install a global onerror handler
      * @param {Function} handler
      * @param {window} win tracekit will be attached to this window
@@ -265,6 +277,42 @@ TraceKit.report = (function reportModuleWrapper() {
       win.onerror = traceKitWindowOnError;
       win._onErrorHandlerInstalled = true;
       handlers.push([handler, win, oldOnerrorHandler]);
+    }
+
+    /**
+     * Uninstall the global onerror handler
+     * @memberof TraceKit.report
+     */
+    function uninstallGlobalHandler() {
+        if (_onErrorHandlerInstalled) {
+            window.onerror = _oldOnerrorHandler;
+            _onErrorHandlerInstalled = false;
+        }
+    }
+
+    /**
+     * Install a global onunhandledrejection handler
+     * @memberof TraceKit.report
+     */
+    function installGlobalUnhandledRejectionHandler() {
+        if (_onUnhandledRejectionHandlerInstalled === true) {
+            return;
+        }
+
+        _oldOnunhandledrejectionHandler = window.onunhandledrejection;
+        window.onunhandledrejection = traceKitWindowOnUnhandledRejection;
+        _onUnhandledRejectionHandlerInstalled = true;
+    }
+
+    /**
+     * Uninstall the global onunhandledrejection handler
+     * @memberof TraceKit.report
+     */
+    function uninstallGlobalUnhandledRejectionHandler() {
+        if (_onUnhandledRejectionHandlerInstalled) {
+            window.onerror = _oldOnunhandledrejectionHandler;
+            _onUnhandledRejectionHandlerInstalled = false;
+        }
     }
 
     /**
