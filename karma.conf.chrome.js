@@ -5,7 +5,11 @@ module.exports = function(config) {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
-
+    plugins: [
+      'karma-phantomjs-launcher',
+      'karma-jasmine',
+      'karma-chrome-launcher'
+      ],
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -55,8 +59,15 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: ['ChromeDebugging'],
 
+    customLaunchers: {
+      ChromeDebugging: {
+        base: 'Chrome',
+        flags: ['--remote-debugging-prt=9333'],
+        debug: true
+      }
+    },
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false
