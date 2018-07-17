@@ -7,6 +7,22 @@ export interface StackFrame {
     context:string[];
 }
 
+declare global {
+    interface Window {
+        onunhandledrejection: PromiseRejectionEvent;
+        _onErrorHandlerInstalled : boolean;
+    }
+    interface Error {
+        columnNumber: number;
+        stacktrace : string;
+        description : string;
+        sourceURL : string;
+        fileName: string;
+        line : number;
+        lineNumber : number;
+    }    
+}
+
 export interface StackTrace {
     /**
      * Known modes: callers, failed, multiline, onerror, stack, stacktrace
@@ -17,7 +33,18 @@ export interface StackTrace {
     url:string;
     stack:StackFrame[];
     useragent:string;
+    incomplete?: boolean;
+    partial?: boolean;
 }
+
+export interface TraceKit {
+    /**
+     * stacktrace
+     */
+    StackTrace:StackTrace;
+}
+
+
 
 interface ComputeStackTrace {
     /**

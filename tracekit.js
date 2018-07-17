@@ -1,9 +1,10 @@
+/// <reference path="tracekit.d.ts"/>
 /**
  * https://github.com/csnover/TraceKit
  * @license MIT
  * @namespace TraceKit
  */
-(function(window, undefined) {
+(function (window, undefined) {
 if (!window) {
     return;
 }
@@ -120,55 +121,69 @@ TraceKit.report = (function reportModuleWrapper() {
         lastException = null,
         lastExceptionStack = null;
 
-  
+    /**
+     * 
+     * @param {*} newOnErrorHandler 
+     * @param {*} errorWindow 
+     * @param {*} oldOnErrorHandler 
+     * @param {*} oldOnunhandledrejection 
+     */
+    function HandlerClass(newOnErrorHandler, errorWindow, oldOnErrorHandler, oldOnunhandledrejection) {
+        this.handler = newOnErrorHandler;
+        this.window = errorWindow;
+        this.oldOnErrorHandler = oldOnErrorHandler;
+        this.oldOnunhandledrejection = oldOnunhandledrejection;
+    }
+
     /**     
-    * Can the window be used     
-    * @param {type} win      
-    * @returns {boolean}  
-    * @memberof TraceKit.report
-    */
+     * Can the window be used     
+     * @param {Window} win      
+     * @returns {boolean}  
+     * @memberof TraceKit.report
+     */
     function isWindowAccessible(win) {
-      try {
-        return (win.location.href);
-      } catch (e) { return false; }
+        try {
+            return (win.location.href !=='');
+        } catch (e) {
+            return false;
+        }
     }
     /**
      * Add a crash handler.
      * @param {Function} handler
-     * @param {window} win default is current window. Need if you want to subcribe tracekit to another window/frame
+     * @param {Window} win default is current window. Need if you want to subcribe tracekit to another window/frame
      * @memberof TraceKit.report
      */
     function subscribe(handler, win) {
-      win = (win || window);
-      if (isWindowAccessible(win)) {
-        TraceKit.windowPointer = win;
-        installGlobalHandler(handler, win);
-      }
+        win = (win || window);
+        if (isWindowAccessible(win)) {
+            TraceKit.windowPointer = win;
+            installGlobalHandler(handler, win);
+        }
     }
-
     /**
      * Remove a crash handler.
      * @param {Function} handler
-     * @param {window} win default is current window. Need if you want to unsubcribe tracekit to another window/frame
+     * @param {Window} win default is current window. Need if you want to unsubcribe tracekit to another window/frame
      * @memberof TraceKit.report
      */
     function unsubscribe(handler, win) {
-      win = (win || window);
-      if (isWindowAccessible(win)) {
-        for (var i = handlers.length - 1; i >= 0; --i) {
-          if (handlers[i][0] === handler && win === handlers[i][1]) {
-                // put back the old event handler
-            //    win.onerror = handlers[i][2];
-                // remove handler from handlers
-                handlers.splice(i, 1);
+        win = (win || window);
+        if (isWindowAccessible(win)) {
+            for (var i = handlers.length - 1; i >= 0; --i) {
+                if (handlers[i].handler === handler && win === handlers[i].window) {
+                    // put back the old event handler
+                    uninstallGlobalHandler(handlers[i]);
+                    // remove handler from handlers
+                    handlers.splice(i, 1);
+                }
             }
         }
-      }
     }
 
     /**
      * Dispatch stack information to all handlers.
-     * @param {TraceKit.StackTrace} stack
+     * @param {StackTrace} stack
      * @param {boolean} isWindowError Is this a top-level window error?
      * @param {array} args all the arguments from onerror event. Array of [Message, url, lineNo, columnNo, errorObj]
      * @memberof TraceKit.report
@@ -176,54 +191,49 @@ TraceKit.report = (function reportModuleWrapper() {
      */
     function notifyHandlers(stack, isWindowError, args) {
         var exception = null;
-        if (isWindowError && !TraceKit.collectWindowErrors) {
-          return;
+        if (isWindowError && !TraceKit.collectWindowErrors || handlers.length===0) {
+            return;
         }
         for (var i in handlers) {
-        if (_has(handlers, i) && handlers[i][1] === TraceKit.windowPointer) {
+            if (_has(handlers, i) && handlers[i].window === TraceKit.windowPointer) {
                 try {
-                  var errorObj=(args.length > 4) ? args[4] : null;
-                  handlers[i][0](stack, isWindowError, errorObj);
+                    var errorObj = (args.length > 4) ? args[4] : args;
+                    handlers[i].handler(stack, isWindowError, errorObj);
                 } catch (inner) {
                     exception = inner;
                 }
-          // Call old onerror events
-          if (handlers[i][2]) {
-            return handlers[i][2].apply(handlers[i][1], args);
             }
         }
-      }
 
         if (exception) {
             throw exception;
         }
     }
 
-
     /**
      * Ensures all global unhandled exceptions are recorded.
      * Supported by Gecko and IE.
      * @param {string} message Error message.
      * @param {string} url URL of script that generated the exception.
-     * @param {(number|string)} lineNo The line number at which the error occurred.
+     * @param {number} lineNo The line number at which the error occurred.
      * @param {(number|string)=} columnNo The column number at which the error occurred.
      * @param {Error=} errorObj The actual Error object.
      * @memberof TraceKit.report
      */
     function traceKitWindowOnError(message, url, lineNo, columnNo, errorObj) {
-        var stack = null;
-      TraceKit.windowPointer = this;
+        var stack = {};
+        TraceKit.windowPointer = this;
         if (lastExceptionStack) {
             TraceKit.computeStackTrace.augmentStackTraceWithInitialElement(lastExceptionStack, url, lineNo, message);
-    	    processLastException();
-	    } else if (errorObj) {
+            processLastException();
+        } else if (errorObj) {
             stack = TraceKit.computeStackTrace(errorObj);
-            notifyHandlers(stack, true, errorObj);
+            notifyHandlers(stack, true, Array.prototype.slice.call(arguments));
         } else {
             var location = {
-              'url': url,
-              'line': lineNo,
-              'column': columnNo
+                'url': url,
+                'line': lineNo,
+                'column': columnNo
             };
             var name;
             var msg = message; // must be new var or will modify original `arguments`
@@ -239,11 +249,13 @@ TraceKit.report = (function reportModuleWrapper() {
             stack = {
                 'name': name,
                 'message': msg,
-              'mode': 'onerror',
-              'stack': [location]
+                'mode': 'onerror',
+                'stack': [location],
+                incomplete: false,
+                partial: false
             };
 
-            notifyHandlers(stack, true, null);
+            notifyHandlers(stack, true, Array.prototype.slice.call(arguments));
         }
 
 
@@ -252,19 +264,47 @@ TraceKit.report = (function reportModuleWrapper() {
     }
 
     /**
+     * Ensures all unhandled rejections are recorded.
+     * @param {PromiseRejectionEvent} e event.
+     * @memberof TraceKit.report
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/PromiseRejectionEvent
+     */
+    function traceKitWindowOnUnhandledRejection(e) {
+        var stack = TraceKit.computeStackTrace(e.reason);
+        notifyHandlers(stack, true, e.reason);
+    }
+
+    /**
      * Install a global onerror handler
      * @param {Function} handler
-     * @param {window} win tracekit will be attached to this window
+     * @param {Window} win tracekit will be attached to this window
      * @memberof TraceKit.report
      */
     function installGlobalHandler(handler, win) {
-      if (win._onErrorHandlerInstalled === true) {
+        if (win._onErrorHandlerInstalled === true) {
             return;
         }
-      var oldOnerrorHandler = win.onerror;
-      win.onerror = traceKitWindowOnError;
-      win._onErrorHandlerInstalled = true;
-      handlers.push([handler, win, oldOnerrorHandler]);
+        var oldOnerrorHandler = win.onerror;
+        var oldOnunhandledrejection = win.onunhandledrejection;
+        win.onerror = traceKitWindowOnError;
+        win.onunhandledrejection = traceKitWindowOnUnhandledRejection;
+        win._onErrorHandlerInstalled = true;
+        handlers.push(new HandlerClass(handler, win, oldOnerrorHandler, oldOnunhandledrejection));
+    }
+
+    /**
+     * Uninstall the global onerror handler
+     * @param {HandlerClass} handler
+     * @memberof TraceKit.report
+     */
+    function uninstallGlobalHandler(handler) {
+        var win = handler.window;
+        if (win._onErrorHandlerInstalled) {
+            win.onerror = handler.oldOnErrorHandler;
+            win.onunhandledrejection = handler.oldOnunhandledrejection;
+            win._onErrorHandlerInstalled = false;
+        }
     }
 
     /**
@@ -290,7 +330,7 @@ TraceKit.report = (function reportModuleWrapper() {
             if (lastException === ex) {
                 return; // already caught by an inner catch block, ignore
             } else {
-              processLastException();
+                processLastException();
             }
         }
 
@@ -303,7 +343,7 @@ TraceKit.report = (function reportModuleWrapper() {
         // this exception; otherwise, we will end up with an incomplete
         // stack trace
         window.setTimeout(function () {
-            if (lastException == ex) {
+            if (lastException === ex) {
                 processLastException();
             }
         }, (stack.incomplete ? 2000 : 0));
@@ -333,8 +373,10 @@ TraceKit.report = (function reportModuleWrapper() {
  * @typedef {Object} StackTrace
  * @property {string} name The name of the thrown exception.
  * @property {string} message The exception error message.
- * @property {TraceKit.StackFrame[]} stack An array of stack frames.
+ * @property {StackFrame[]} stack An array of stack frames.
  * @property {string} mode 'stack', 'stacktrace', 'multiline', 'callers', 'onerror', or 'failed' -- method used to collect the stack trace.
+ * @property {boolean?} incomplete 
+ * @property {boolean?} partial 
  * @memberof TraceKit
  */
 
@@ -418,7 +460,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             return '';
         }
         try {
-            var getXHR = function() {
+            var getXHR = function () {
                 try {
                     return new window.XMLHttpRequest();
                 } catch (e) {
@@ -460,9 +502,9 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             */
             var source = '';
             var domain = '';
-        try {
-          domain = curWin.document.domain;
-        } catch (e) {}
+            try {
+                domain = curWin.document.domain;
+            } catch (e) {}
             var match = /(.*)\:\/\/([^:\/]+)([:\d]*)\/{0,1}([\s\S]*)/.exec(url);
             if (match && match[2] === domain) {
                 source = loadSource(url);
@@ -478,7 +520,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * the name of a function by looking at the name of the variable it was
      * assigned to, if any.
      * @param {string} url URL of source code.
-     * @param {(string|number)} lineNo Line number in source code.
+     * @param {(number)} lineNo Line number in source code.
      * @return {string} The function name, if discoverable.
      * @memberof TraceKit.computeStackTrace
      */
@@ -514,7 +556,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     /**
      * Retrieves the surrounding lines from where an exception occurred.
      * @param {string} url URL of source code.
-     * @param {(string|number)} line Line number in source code to center around for context.
+     * @param {number} line Line number in source code to center around for context.
      * @return {?Array.<string>} Lines of source code.
      * @memberof TraceKit.computeStackTrace
      */
@@ -602,7 +644,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * source code.
      * @param {string} fragment The code fragment.
      * @param {string} url The URL to search.
-     * @param {(string|number)} line The line number to examine.
+     * @param {number} line The line number to examine.
      * @return {?number} The column number.
      * @memberof TraceKit.computeStackTrace
      */
@@ -629,12 +671,12 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @memberof TraceKit.computeStackTrace
      */
     function findSourceByFunctionBody(func) {
-      if (_isUndefined(curWin && curWin.document)) {
+        if (_isUndefined(curWin && curWin.document)) {
             return;
         }
 
-      var urls = [curWin.location.href],
-        scripts = curWin.document.getElementsByTagName('script'),
+        var urls = [curWin.location.href],
+            scripts = curWin.document.getElementsByTagName('script'),
             body,
             code = '' + func,
             codeRE = /^function(?:\s+([\w$]+))?\s*\(([\w\s,]*)\)\s*\{\s*(\S[\s\S]*\S)\s*\}\s*$/,
@@ -733,7 +775,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * Computes stack trace information from the stack property.
      * Chrome and Gecko use this property.
      * @param {Error} ex
-     * @return {?TraceKit.StackTrace} Stack trace information.
+     * @return {?StackTrace} Stack trace information.
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTraceFromStackProp(ex) {
@@ -752,7 +794,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             stack = [],
             submatch,
             parts,
-            element,
+            element = {},
             reference = /^(.*) is undefined$/.exec(ex.message);
 
         for (var i = 0, j = lines.length; i < j; ++i) {
@@ -772,7 +814,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                     'line': parts[3] ? +parts[3] : null,
                     'column': parts[4] ? +parts[4] : null
                 };
-            } else if ( parts = winjs.exec(lines[i]) ) {
+            } else if (parts = winjs.exec(lines[i])) {
                 element = {
                     'url': parts[2],
                     'func': parts[1] || UNKNOWN_FUNCTION,
@@ -798,7 +840,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                     'url': parts[3],
                     'func': parts[1] || UNKNOWN_FUNCTION,
                     'args': parts[2] ? parts[2].split(',') : [],
-                    'line': parts[4] ? +parts[4] : null,
+                    'line': parts[4] ? parseInt(parts[4]) : null,
                     'column': parts[5] ? +parts[5] : null
                 };
             } else {
@@ -823,10 +865,12 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         }
 
         return {
-            'mode': 'stack',
-            'name': ex.name,
-            'message': ex.message,
-            'stack': stack
+            mode: 'stack',
+            name: ex.name,
+            message: ex.message,
+            stack: stack,
+            incomplete: false,
+            partial: false
         };
     }
 
@@ -834,7 +878,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * Computes stack trace information from the stacktrace property.
      * Opera 10+ uses this property.
      * @param {Error} ex
-     * @return {?TraceKit.StackTrace} Stack trace information.
+     * @return {?StackTrace} Stack trace information.
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTraceFromStacktraceProp(ex) {
@@ -860,7 +904,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                     'line': +parts[1],
                     'column': null,
                     'func': parts[3],
-                    'args':[]
+                    'args': []
                 };
             } else if ((parts = opera11Regex.exec(lines[line]))) {
                 element = {
@@ -909,7 +953,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * Opera 9 and earlier use this method if the option to show stack
      * traces is turned on in opera:config.
      * @param {Error} ex
-     * @return {?TraceKit.StackTrace} Stack information.
+     * @return {?StackTrace} Stack information.
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTraceFromOperaMultiLineMessage(ex) {
@@ -937,7 +981,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             lineRE2 = /^\s*Line (\d+) of inline#(\d+) script in ((?:file|https?|blob)\S+)(?:: in function (\S+))?\s*$/i,
             lineRE3 = /^\s*Line (\d+) of function script\s*$/i,
             stack = [],
-        scripts = (curWin && curWin.document && curWin.document.getElementsByTagName('script')),
+            scripts = (curWin && curWin.document && curWin.document.getElementsByTagName('script')),
             inlineScriptBlocks = [],
             parts;
 
@@ -978,7 +1022,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                     }
                 }
             } else if ((parts = lineRE3.exec(lines[line]))) {
-          var url = curWin.location.href.replace(/#.*$/, '');
+                var url = curWin.location.href.replace(/#.*$/, '');
                 var re = new RegExp(escapeCodeAsRegExpForMatchingInsideHTML(lines[line + 1]));
                 var src = findSourceInUrls(re, [url]);
                 item = {
@@ -1082,7 +1126,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * Safari and IE. The top frame is restored by
      * {@link augmentStackTraceWithInitialElement}.
      * @param {Error} ex
-     * @return {TraceKit.StackTrace=} Stack trace information.
+     * @return {StackTrace=} Stack trace information.
      * @memberof TraceKit.computeStackTrace
      */
     function computeStackTraceByWalkingCallerChain(ex, depth) {
@@ -1114,9 +1158,9 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             }
 
             if (typeof item.func === 'undefined') {
-              try {
-                item.func = parts.input.substring(0, parts.input.indexOf('{'));
-              } catch (e) { }
+                try {
+                    item.func = parts.input.substring(0, parts.input.indexOf('{'));
+                } catch (e) {}
             }
 
             if ((source = findSourceByFunctionBody(curr))) {
@@ -1135,7 +1179,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
             if (funcs['' + curr]) {
                 recursion = true;
-            }else{
+            } else {
                 funcs['' + curr] = true;
             }
 
@@ -1253,8 +1297,8 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
  */
 TraceKit.extendToAsynchronousCallbacks = function () {
     var _helper = function _helper(fnName) {
-      var originalFn = TraceKit.windowPointer[fnName];
-      TraceKit.windowPointer[fnName] = function traceKitAsyncExtension() {
+        var originalFn = TraceKit.windowPointer[fnName];
+        TraceKit.windowPointer[fnName] = function traceKitAsyncExtension() {
             // Make a copy of the arguments
             var args = _slice.call(arguments);
             var originalCallback = args[0];
