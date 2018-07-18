@@ -154,12 +154,13 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {Window} win default is current window. Need if you want to subcribe tracekit to another window/frame
      * @memberof TraceKit.report
      */
+
     function subscribe(handler, win) {
-        win = (win || window);
-        if (isWindowAccessible(win)) {
-            TraceKit.windowPointer = win;
-            installGlobalHandler(handler, win);
-        }
+      win = (win || window);
+      if (isWindowAccessible(win)) {
+        TraceKit.windowPointer = win;
+        installGlobalHandler(handler, win);
+      }
     }
     /**
      * Remove a crash handler.
