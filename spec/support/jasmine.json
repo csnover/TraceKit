@@ -1,0 +1,10 @@
+{
+    "spec_dir": "spec",
+    "spec_files": [
+        "*[sS]pec.js"
+    ],
+    "helpers": [
+        "../spec/fixtures/captured-errors.js",
+        "../tracekit.js"
+    ]
+}

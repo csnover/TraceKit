@@ -17,22 +17,25 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "grunt": "1.0.1",
-    "grunt-bump": "^0.8.0",
-    "grunt-cli": "1.2.0",
-    "grunt-contrib-jasmine": "1.1.0",
-    "grunt-contrib-jshint": "1.1.0",
-    "grunt-jsdoc": "2.1.0",
-    "jasmine": "2.6.0",
-    "jasmine-core": "2.6.4",
-    "karma": "1.7.0",
-    "karma-jasmine": "1.1.0",
+    "gulp": "3.9.1",
+    "gulp-jsdoc3": "^2.0.0",
+    "gulp-jshint": "^2.1.0",
+    "jasmine": "3.1.0",
+    "jasmine-core": "3.1.0",
+    "jsdoc": "3.5.5",
+    "jshint": "^2.9.5",
+    "karma": "2.0.4",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-jasmine": "1.1.2",
     "karma-phantomjs-launcher": "1.0.4",
-    "phantomjs-prebuilt": "2.1.14"
+    "phantomjs-prebuilt": "2.1.16"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "gulp test"
   },
   "typings": "tracekit.d.ts",
-  "author": "Blake Niemyjski <bniemyjski@gmail.com>"
+  "author": "Blake Niemyjski <bniemyjski@gmail.com>",
+  "dependencies": {
+    "gulp-bump": "^3.1.1"
+  }
 }

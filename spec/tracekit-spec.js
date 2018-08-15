@@ -129,7 +129,9 @@
           if (message === testMessage || lineNo === testLineNo) {
             return true;
           }
-          return oldOnErrorHandler.apply(this, arguments);
+          if (oldOnErrorHandler) {
+            return oldOnErrorHandler.apply(this, arguments);
+          }
         };
       });
 

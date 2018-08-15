@@ -1,0 +1,82 @@
+<h1>IFrame solution</h1>
+
+<h4>This should be used for iframe pages. Only include this code and it will inject javascript into any frames.</h4>
+
+<pre>
+/**    
+* Description    
+* @param {type} aTracefunc Description    
+*/
+function insertTraceKit(aTracefunc) {
+
+ TraceKit.report.subscribe(aTracefunc);
+
+ function wrapped(aThis) {
+   var w = (aThis.target || aThis);
+
+   function docUnloadChange(e) {
+     TraceKit.report.unsubscribe(yourLogger, e.currentTarget);
+     //console.log('unload', e.currentTarget.location.href, e.currentTarget.readyState);
+     var l = e.currentTarget.location.href;
+     var checkForUnload = function (e) {
+       try {
+         if (l != e.location.href) {
+           clearInterval(unloadCheckInterval);
+           //console.log(e.location.href);
+           TraceKit.report.subscribe(aTracefunc, e);
+         }
+       } catch (exception) {
+         clearInterval(unloadCheckInterval);
+         unloadCheckInterval = setInterval(checkForUnload, 100, this);
+         //console.log('cross-origin frame detected');
+       }
+     };
+     var unloadCheckInterval = setInterval(checkForUnload, 1, this);
+
+   }
+
+   TraceKit.report.subscribe(aTracefunc, w.contentWindow);
+   try {
+     w.contentWindow.addEventListener("unload", docUnloadChange);
+   } catch (e) {
+     //console.log('cross-origin frame detected');
+   }
+ }
+
+ var frames = document.querySelectorAll('frame,iframe');
+ for (var i = 0; i < frames.length; i++) {
+   frames[i].onload = wrapped;
+   try {
+     // console.log(frames[i].contentDocument.readyState, frames[i].contentDocument.location.href);
+     frames[i].readyStateCheckInterval = setInterval(fasteractiveTrace, 1, frames[i]);
+   } catch (e) {
+     //console.log('cross-origin frame detected');
+   }
+ }
+
+ function fasteractiveTrace(e) {
+   try {
+     if (e.contentDocument) {
+       if (e.contentDocument.readyState == "complete" || e.contentDocument.readyState == "interactive") {
+         wrapped(e);
+         clearInterval(e.readyStateCheckInterval);
+       }
+       // console.log(e.contentDocument.readyState, e.contentDocument.location.href);
+     }
+   } catch (exception) {
+     //console.log('cross-origin frame detected');
+   }
+ }
+
+}
+
+var readyStateCheckInterval = setInterval(waitInit, 10, this);
+
+function waitInit() {
+ //console.log(document.readyState);
+ if (document.readyState === "complete" || document.readyState === "interactive") {
+   clearInterval(readyStateCheckInterval);
+   insertTraceKit(yourLogger);
+ }
+}
+</pre>
