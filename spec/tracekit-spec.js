@@ -260,5 +260,59 @@
         });
       });
     });
+
+    describe('globalHandlers', function () {
+      var oldOnErrorHandler;
+      var oldOnUnhandledRejectionHandler;
+
+      var onErrorHandler;
+      var onUnhandledRejectionHandler;
+
+      beforeEach(function () {
+        oldOnErrorHandler = window.onerror;
+        oldOnUnhandledRejectionHandler = window.onunhandledrejection;
+
+        onErrorHandler = function (){};
+        onUnhandledRejectionHandler = function (){};
+
+        window.onerror = onErrorHandler;
+        window.onunhandledrejection = onUnhandledRejectionHandler;
+      });
+
+      afterEach(function () {
+        window.onerror = oldOnErrorHandler;
+        window.onunhandledrejection = oldOnUnhandledRejectionHandler;
+      });
+
+      describe('cleanup after unsubscribing', function () {
+        var testHandler;
+
+        beforeEach(function () {
+          testHandler = function () {
+            return true;
+          };
+        });
+
+        it('should should restore original `window.onerror` once unsubscribed', function () {
+          expect(window.onerror).toBe(onErrorHandler);
+
+          TraceKit.report.subscribe(testHandler);
+          expect(window.onerror).not.toBe(onErrorHandler);
+
+          TraceKit.report.unsubscribe(testHandler);
+          expect(window.onerror).toBe(onErrorHandler);
+        });
+
+        it('should should restore original `window.onunhandledrejection` once unsubscribed', function () {
+          expect(window.onunhandledrejection).toBe(onUnhandledRejectionHandler);
+
+          TraceKit.report.subscribe(testHandler);
+          expect(window.onunhandledrejection).not.toBe(onUnhandledRejectionHandler);
+
+          TraceKit.report.unsubscribe(testHandler);
+          expect(window.onunhandledrejection).toBe(onUnhandledRejectionHandler);
+        });
+      });
+    });
   });
 })();
