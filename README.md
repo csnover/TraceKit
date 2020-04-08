@@ -1,7 +1,7 @@
 TraceKit - Cross browser stack traces.
 =====================================
 
-[![Build status](https://ci.appveyor.com/api/projects/status/t886g3yu29r6yshq/branch/master?svg=true)](https://ci.appveyor.com/project/Exceptionless/tracekit/branch/master)
+![Build](https://github.com/csnover/TraceKit/workflows/Node.js%20CI/badge.svg)
 
 ### Supports all major browsers, from IE6 to Opera, the Android webview and everywhere in between.
 
