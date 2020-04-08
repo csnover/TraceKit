@@ -117,7 +117,6 @@
       //this.timeout(3000);
 
       beforeEach(function () {
-
         // Prevent the onerror call that's part of our tests from getting to
         // mocha's handler, which would treat it as a test failure.
         //
@@ -126,9 +125,14 @@
         // be installed once.
         oldOnErrorHandler = window.onerror;
         window.onerror = function (message, url, lineNo, error) {
+          var shouldLog = message !== "__mocha_ignore__";
+          shouldLog && console.log("window.onerror(" + message + ", " + url + ", " + lineNo + ", " + error + ")");
           if (message === testMessage || lineNo === testLineNo) {
+            shouldLog && console.log("matches test message and line number");
             return true;
           }
+
+          shouldLog && console.log("Calling previous handler", oldOnErrorHandler)
           return oldOnErrorHandler.apply(this, arguments);
         };
       });
