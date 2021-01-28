@@ -14,7 +14,7 @@ out as much useful information as possible and normalizes it. 3kB minified + gzi
 ```
 bower install tracekit
 ```
-This places TraceKit at `components/tracekit/tracekit.js`. Install [bower](http://twitter.github.com/bower/): `npm install bower -g`, download npm with Node: http://nodejs.org
+This places TraceKit at `components/tracekit/tracekit.js`. Install [bower](https://github.com/bower/bower): `npm install bower -g`, download npm with Node: http://nodejs.org
 
 Then include the `<script>` to your page
 
