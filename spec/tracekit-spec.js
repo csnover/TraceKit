@@ -117,6 +117,7 @@
       //this.timeout(3000);
 
       beforeEach(function () {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 3000;
         // Prevent the onerror call that's part of our tests from getting to
         // mocha's handler, which would treat it as a test failure.
         //
