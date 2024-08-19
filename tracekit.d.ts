@@ -4,7 +4,7 @@ export interface StackFrame {
     args:string[];
     line:number;
     column:number;
-    context:string[];
+    context:null | string[];
 }
 
 export interface StackTrace {
