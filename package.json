@@ -21,7 +21,7 @@
     "grunt-bump": "^0.8.0",
     "grunt-cli": "1.3.2",
     "grunt-contrib-jasmine": "2.2.0",
-    "grunt-contrib-jshint": "3.0.0",
+    "grunt-contrib-jshint": "3.2.0",
     "grunt-jsdoc": "2.4.1",
     "jasmine": "3.6.4",
     "jasmine-core": "3.6.0",
