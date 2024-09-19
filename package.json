@@ -5,7 +5,7 @@
   "homepage": "https://github.com/csnover/TraceKit",
   "description": "Cross browser stack traces",
   "repository": {
-    "url": "https://github.com/csnover/TraceKit.git",
+    "url": "git+https://github.com/csnover/TraceKit.git",
     "type": "git"
   },
   "bugs": {
