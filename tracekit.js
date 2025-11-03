@@ -1324,4 +1324,4 @@ if (typeof define === 'function' && define.amd) {
     window.TraceKit = TraceKit;
 }
 
-}(globalThis));
+}(typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : globalThis));
