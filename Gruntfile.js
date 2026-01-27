@@ -34,15 +34,6 @@ module.exports = function (grunt) {
                 ]
             }
         },
-        jasmine : {
-            src: [
-                'tracekit.js',
-                'spec/fixtures/captured-errors.js'
-            ],
-            options: {
-                specs: 'spec/*-spec.js'
-            }
-        },
         jsdoc : {
             dist: {
                 src: ['tracekit.js'],
@@ -52,15 +43,21 @@ module.exports = function (grunt) {
                     configure: 'jsdoc.conf.json'
                 }
             }
+        },
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js',
+                singleRun: true
+            }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('doc', ['jsdoc']);
-    grunt.registerTask('test', ['jasmine']);
+    grunt.registerTask('test', ['karma:unit']);
     grunt.registerTask('default', ['jshint:lint']);
 };

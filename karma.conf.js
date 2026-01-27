@@ -1,6 +1,8 @@
 // Karma configuration
 
 module.exports = function(config) {
+  var isCI = Boolean(process.env.CI);
+
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -10,6 +12,12 @@ module.exports = function(config) {
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine'],
+
+    client: {
+      jasmine: {
+        random: false
+      }
+    },
 
 
     // list of files / patterns to load in the browser
@@ -50,15 +58,22 @@ module.exports = function(config) {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    autoWatch: !isCI,
 
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: [isCI ? 'ChromeHeadlessCI' : 'ChromeHeadless'],
+
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-gpu']
+      }
+    },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: isCI
   })
 };

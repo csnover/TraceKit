@@ -19,13 +19,17 @@ jobs:
         node-version: [24.x]
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Set up Chrome
+      id: setup-chrome
+      uses: browser-actions/setup-chrome@v1
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
       env:
         CI: true
+        CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
