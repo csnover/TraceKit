@@ -87,6 +87,20 @@
         expect(stack.message).toEqual('test');
       });
 
+      it('should handle undefined (e.g. from Promise.reject())', function () {
+        var stack = TraceKit.computeStackTrace(undefined);
+        expect(stack.name).toBeFalsy();
+        expect(stack.message).toBeFalsy();
+        expect(stack.mode).toEqual('failed');
+      });
+
+      it('should handle null (e.g. from Promise.reject(null))', function () {
+        var stack = TraceKit.computeStackTrace(null);
+        expect(stack.name).toBeFalsy();
+        expect(stack.message).toBeFalsy();
+        expect(stack.mode).toEqual('failed');
+      });
+
       it('should handle a native error object stack from Chrome', function () {
         var stackStr = '' +
           'Error: foo\n' +
