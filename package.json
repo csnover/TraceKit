@@ -23,8 +23,8 @@
     "grunt-contrib-jshint": "3.2.0",
     "grunt-karma": "4.0.2",
     "grunt-jsdoc": "2.4.1",
-    "jasmine": "6.0.0",
-    "jasmine-core": "6.0.1",
+    "jasmine": "6.1.0",
+    "jasmine-core": "6.1.0",
     "karma": "6.4.4",
     "karma-chrome-launcher": "3.2.0",
     "karma-jasmine": "5.1.0"
