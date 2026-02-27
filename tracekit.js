@@ -1242,8 +1242,8 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         }
 
         return {
-            'name': ex.name,
-            'message': ex.message,
+            'name': ex && ex.name,
+            'message': ex && ex.message,
             'mode': 'failed'
         };
     }
